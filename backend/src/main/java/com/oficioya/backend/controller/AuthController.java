@@ -62,6 +62,19 @@ public class AuthController {
         }
     }
 
+    @PostMapping("/login-admin")
+    public ResponseEntity<LoginResponse> loginAdmin(
+            @Valid @RequestBody LoginRequest request) {
+
+        try {
+            return ResponseEntity.ok(authService.loginAdmin(request));
+        } catch (AuthenticationException ex) {
+            throw new ResponseStatusException(
+                    HttpStatus.UNAUTHORIZED,
+                    "Credenciales incorrectas");
+        }
+    }
+
     @GetMapping("/me")
     public ResponseEntity<UsuarioResponse> obtenerPerfil(
             Authentication authentication) {

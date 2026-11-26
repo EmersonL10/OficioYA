@@ -6,6 +6,14 @@
   [seccion]="seccion()"
   (seleccionar)="cambiarSeccion($event)">
 
+  <button
+    sidebar-actions
+    type="button"
+    class="btn btn-outline"
+    (click)="cerrarSesion()">
+    Cerrar sesión
+  </button>
+
   <div class="contenido">
     <app-notification
       [mensaje]="mensaje()"

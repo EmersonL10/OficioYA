@@ -42,7 +42,7 @@ export class AdminLogin {
 
     this.cargando.set(true);
 
-    this.auth.login({
+    this.auth.loginAdmin({
       correo: datos.correo.trim().toLowerCase(),
       contrasena: datos.contrasena
     }).pipe(
@@ -55,7 +55,9 @@ export class AdminLogin {
           return;
         }
 
-        this.router.navigate(['/admin']);
+        void this.router.navigate(['/admin'], {
+          replaceUrl: true
+        });
       },
       error: (error: HttpErrorResponse) => {
         this.error.set(error.status === 0

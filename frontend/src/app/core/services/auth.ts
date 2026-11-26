@@ -36,14 +36,15 @@ export class Auth {
     return this.http.post<LoginResponse>(
       `${this.url}/login`, datos
     ).pipe(
-      tap(respuesta => {
-        sessionStorage.setItem('token', respuesta.token);
-        sessionStorage.setItem(
-          'usuario', JSON.stringify(respuesta.usuario)
-        );
+      tap(respuesta => this.guardarSesion(respuesta))
+    );
+  }
 
-        this.usuarioActual.set(respuesta.usuario);
-      })
+  loginAdmin(datos: LoginRequest) {
+    return this.http.post<LoginResponse>(
+      `${this.url}/login-admin`, datos
+    ).pipe(
+      tap(respuesta => this.guardarSesion(respuesta))
     );
   }
 
@@ -72,6 +73,15 @@ export class Auth {
     sessionStorage.removeItem('token');
     sessionStorage.removeItem('usuario');
     this.usuarioActual.set(null);
+  }
+
+  private guardarSesion(respuesta: LoginResponse): void {
+    sessionStorage.setItem('token', respuesta.token);
+    sessionStorage.setItem(
+      'usuario', JSON.stringify(respuesta.usuario)
+    );
+
+    this.usuarioActual.set(respuesta.usuario);
   }
 
   private recuperarUsuario(): Usuario | null {

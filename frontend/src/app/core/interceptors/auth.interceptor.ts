@@ -6,18 +6,33 @@ import { API_URL } from '../api.config';
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
 
   const auth = inject(Auth);
-  const token = auth.obtenerToken();
 
-  if (token && req.url.startsWith(`${API_URL}/`)) {
+  const rutasPublicas = [
+    `${API_URL}/auth/login`,
+    `${API_URL}/auth/login-admin`,
+    `${API_URL}/auth/registro`,
+    `${API_URL}/auth/registro-profesional`
+  ];
 
-    const peticion = req.clone({
-      setHeaders: {
-        Authorization: `Bearer ${token}`
-      }
-    });
+  const esRutaPublica =
+    rutasPublicas.includes(req.url) ||
+    req.url.startsWith(`${API_URL}/publico/`);
 
-    return next(peticion);
+  if (esRutaPublica || !req.url.startsWith(`${API_URL}/`)) {
+    return next(req);
   }
 
-  return next(req);
+  const token = auth.obtenerToken();
+
+  if (!token) {
+    return next(req);
+  }
+
+  const peticion = req.clone({
+    setHeaders: {
+      Authorization: `Bearer ${token}`
+    }
+  });
+
+  return next(peticion);
 };

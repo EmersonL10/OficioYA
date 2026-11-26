@@ -1,5 +1,6 @@
 import { Component, inject, OnInit, signal, viewChild } from '@angular/core';
 import { HttpErrorResponse } from '@angular/common/http';
+import { Router } from '@angular/router';
 import { finalize, forkJoin, Observable } from 'rxjs';
 
 import { Auth } from '../../core/services/auth';
@@ -27,6 +28,7 @@ import { Categorias } from './components/categorias/categorias';
 export class Admin implements OnInit {
   readonly auth = inject(Auth);
 
+  private readonly router = inject(Router);
   private usuarioService = inject(UsuarioService);
   private categoriaService = inject(CategoriaService);
 
@@ -53,6 +55,13 @@ export class Admin implements OnInit {
 
   ngOnInit(): void {
     this.cargarDatos();
+  }
+
+  cerrarSesion(): void {
+    this.auth.cerrarSesion();
+    void this.router.navigate(['/admin/login'], {
+      replaceUrl: true
+    });
   }
 
   cargarDatos(): void {
