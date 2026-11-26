@@ -1,0 +1,25 @@
+<section class="dashboard container">
+  <aside class="sidebar card">
+    <div class="profile">
+      <span>{{ titulo() }}</span>
+      <h3>{{ nombre() }}</h3>
+      <small>{{ correo() }}</small>
+    </div>
+
+    <nav [attr.aria-label]="titulo()">
+      @for (item of menu(); track item.id) {
+        <button type="button" [class.active]="seccion() === item.id"
+                [attr.aria-current]="seccion() === item.id ? 'page' : null"
+                (click)="seleccionar.emit(item.id)">
+          {{ item.nombre }}
+        </button>
+      }
+    </nav>
+
+    <ng-content select="[sidebar-actions]" />
+  </aside>
+
+  <div class="content">
+    <ng-content />
+  </div>
+</section>

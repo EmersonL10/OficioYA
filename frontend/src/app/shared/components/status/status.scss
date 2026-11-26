@@ -1,0 +1,41 @@
+.status {
+  display: inline-flex;
+  padding: 4px 8px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--background);
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 600;
+
+  &[data-estado='ABIERTA'],
+  &[data-estado='CONTRATADA'],
+  &[data-estado='EN_PROCESO'] {
+    background: #eaf2f8;
+    color: var(--primary);
+    border-color: #c8deed;
+  }
+
+  &[data-estado='ACTIVO'],
+  &[data-estado='DISPONIBLE'],
+  &[data-estado='ACEPTADA'],
+  &[data-estado='FINALIZADA'] {
+    background: #edf7ef;
+    color: var(--success);
+    border-color: #c6e4ce;
+  }
+
+  &[data-estado='PENDIENTE'] {
+    background: #fff8e6;
+    color: #805600;
+    border-color: #ead9a3;
+  }
+
+  &[data-estado='CANCELADA'],
+  &[data-estado='RECHAZADA'],
+  &[data-estado='INACTIVO'] {
+    background: #fef3f2;
+    color: var(--danger);
+    border-color: #f3c6c2;
+  }
+}
