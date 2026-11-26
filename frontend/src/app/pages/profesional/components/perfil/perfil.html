@@ -1,0 +1,76 @@
+<header>
+  <h1>Mi perfil profesional</h1>
+  <p>Administra tu información profesional y disponibilidad laboral.</p>
+</header>
+
+@if (perfil(); as profesional) {
+  <section class="card disponibilidad">
+    <div>
+      <h2>Disponibilidad laboral</h2>
+      <p>{{ profesional.disponible
+        ? 'Actualmente puedes recibir oportunidades laborales.'
+        : 'Tu perfil no está disponible para nuevas oportunidades.' }}</p>
+
+      <app-status [estado]="profesional.disponible ? 'DISPONIBLE' : 'NO DISPONIBLE'" />
+    </div>
+
+    <button type="button" class="btn btn-outline"
+            (click)="cambiarDisponibilidad.emit(!profesional.disponible)">
+      {{ profesional.disponible ? 'Desactivar disponibilidad' : 'Activar disponibilidad' }}
+    </button>
+  </section>
+}
+
+<section class="card datos">
+  <h2>{{ perfil() ? 'Información profesional' : 'Registrar perfil profesional' }}</h2>
+  <p>Completa los datos que podrán consultar tus potenciales clientes.</p>
+
+  <app-notification [mensaje]="error()" tipo="error" (cerrar)="error.set('')" />
+
+  <form [formGroup]="formulario" (ngSubmit)="enviar()" novalidate>
+    <div class="campos">
+      <div class="form-group">
+        <label for="especialidad">Especialidad</label>
+        <select id="especialidad" formControlName="categoriaId">
+          <option [ngValue]="null">Selecciona una especialidad</option>
+
+          @for (categoria of categorias(); track categoria.id) {
+            <option [ngValue]="categoria.id">{{ categoria.nombre }}</option>
+          }
+        </select>
+
+        @if (formulario.controls.categoriaId.touched && formulario.controls.categoriaId.invalid) {
+          <span class="error">Selecciona tu especialidad.</span>
+        }
+      </div>
+
+      <div class="form-group">
+        <label for="experiencia">Años de experiencia</label>
+        <input id="experiencia" type="number" formControlName="experienciaAnios"
+               min="0" max="70" step="1">
+
+        @if (formulario.controls.experienciaAnios.touched && formulario.controls.experienciaAnios.invalid) {
+          <span class="error">Ingresa un valor entre 0 y 70 años.</span>
+        }
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="descripcion">Descripción profesional</label>
+      <textarea id="descripcion" formControlName="descripcion" rows="6"
+                placeholder="Describe tu experiencia, conocimientos y servicios."></textarea>
+
+      <small>{{ formulario.controls.descripcion.value.length }}/1000 caracteres</small>
+
+      @if (formulario.controls.descripcion.touched && formulario.controls.descripcion.invalid) {
+        <span class="error">Ingresa una descripción de 10 a 1000 caracteres.</span>
+      }
+    </div>
+
+    <div class="acciones">
+      <button type="submit" class="btn btn-primary" [attr.aria-busy]="procesando()">
+        {{ procesando() ? 'Guardando...' : perfil() ? 'Guardar cambios' : 'Crear perfil profesional' }}
+      </button>
+    </div>
+  </form>
+</section>

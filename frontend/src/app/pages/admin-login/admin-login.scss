@@ -1,0 +1,73 @@
+:host {
+  display: block;
+}
+
+.acceso-administrativo {
+  min-height: 100dvh;
+  display: grid;
+  place-items: center;
+  padding: var(--space-5);
+  background: var(--background);
+}
+
+.acceso-card {
+  width: 100%;
+  max-width: 440px;
+  padding: var(--space-6);
+}
+
+header {
+  margin-bottom: var(--space-5);
+
+  h1 {
+    font-size: var(--font-h2);
+    margin-bottom: var(--space-2);
+  }
+
+  p {
+    color: var(--muted);
+  }
+}
+
+.marca {
+  font-size: var(--font-logo);
+  font-weight: 700;
+  margin-bottom: var(--space-5);
+
+  span {
+    color: var(--primary);
+  }
+}
+
+.campo-contrasena {
+  display: flex;
+  gap: var(--space-2);
+
+  input {
+    flex: 1;
+    min-width: 0;
+  }
+}
+
+.ingresar {
+  width: 100%;
+}
+
+footer {
+  margin-top: var(--space-5);
+  padding-top: var(--space-4);
+  border-top: 1px solid var(--border);
+  text-align: center;
+  color: var(--muted);
+  font-size: var(--font-footer);
+}
+
+.ng-invalid.ng-touched {
+  border-color: var(--danger);
+}
+
+@media (max-width: 600px) {
+  .acceso-card {
+    padding: var(--space-4);
+  }
+}

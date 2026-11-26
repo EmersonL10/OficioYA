@@ -1,0 +1,188 @@
+.registro-page {
+  padding-block: var(--space-6);
+}
+
+.registro-container {
+  display: flex;
+  justify-content: center;
+}
+
+.registro-card {
+  width: 100%;
+  max-width: 600px;
+  padding: var(--space-6);
+}
+
+.registro-heading {
+  margin-bottom: var(--space-5);
+
+  h1 {
+    margin-bottom: var(--space-2);
+  }
+
+  p {
+    color: var(--muted);
+    margin: 0;
+  }
+}
+
+.account-section {
+  min-width: 0;
+  padding: 0;
+  margin: 0 0 var(--space-5);
+  border: none;
+
+  legend {
+    font-weight: 600;
+    margin-bottom: var(--space-3);
+    padding: 0;
+  }
+}
+
+.account-options {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-3);
+}
+
+.account-option {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-2);
+  padding: var(--space-3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  cursor: pointer;
+
+  input {
+    accent-color: var(--primary);
+    margin-top: var(--space-1);
+  }
+
+  strong {
+    display: block;
+    font-weight: 600;
+    margin-bottom: var(--space-1);
+  }
+
+  small {
+    display: block;
+    color: var(--muted);
+    font-size: var(--font-small);
+  }
+
+  &:hover {
+    border-color: var(--primary);
+  }
+
+  &.selected {
+    border-color: var(--primary);
+    background: #eaf2f8;
+  }
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-4);
+}
+
+.password-field {
+  display: flex;
+  align-items: stretch;
+
+  input {
+    min-width: 0;
+    border-radius: var(--radius) 0 0 var(--radius);
+  }
+}
+
+.password-toggle {
+  padding-inline: var(--space-3);
+  border: 1px solid var(--border);
+  border-left: 0;
+  border-radius: 0 var(--radius) var(--radius) 0;
+  background: var(--surface);
+  color: var(--primary);
+  font-size: var(--font-small);
+
+  &:hover {
+    background: var(--background);
+  }
+}
+
+.field-help {
+  color: var(--muted);
+  font-size: var(--font-small);
+}
+
+.register-button {
+  width: 100%;
+  margin-top: var(--space-2);
+}
+
+.error-message {
+  padding: var(--space-3);
+  margin-bottom: var(--space-4);
+  border: 1px solid var(--danger);
+  border-left: 3px solid var(--danger);
+  border-radius: var(--radius);
+  background: #fef3f2;
+  color: var(--danger);
+  font-size: var(--font-small);
+}
+
+.form-group {
+  input.ng-invalid.ng-touched {
+    border-color: var(--danger);
+
+    &:focus {
+      outline-color: var(--danger);
+    }
+  }
+}
+
+.login-section {
+  margin-top: var(--space-5);
+  padding-top: var(--space-5);
+  border-top: 1px solid var(--border);
+  text-align: center;
+
+  p {
+    color: var(--muted);
+    margin-bottom: var(--space-2);
+  }
+
+  a {
+    font-weight: 500;
+  }
+}
+
+.success-state {
+  text-align: center;
+  padding-block: var(--space-5);
+
+  p {
+    margin-bottom: var(--space-4);
+  }
+
+  .btn {
+    margin-top: var(--space-2);
+  }
+}
+
+@media (max-width: 600px) {
+
+  .registro-card {
+    padding: var(--space-5);
+  }
+
+  .form-grid,
+  .account-options {
+    grid-template-columns: 1fr;
+  }
+
+  .form-grid {
+    gap: 0;
+  }
+}

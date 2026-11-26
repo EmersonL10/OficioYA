@@ -1,0 +1,86 @@
+:host {
+  display: grid;
+  gap: var(--space-4);
+}
+
+p, small {
+  color: var(--muted);
+}
+
+.filtros {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  border-bottom: 1px solid var(--border);
+
+  button {
+    background: transparent;
+    color: var(--muted);
+    border: 0;
+    border-bottom: 2px solid transparent;
+    padding: var(--space-3);
+    min-height: var(--button-height);
+    cursor: pointer;
+
+    &:hover,
+    &.activo {
+      color: var(--primary);
+    }
+
+    &.activo {
+      border-bottom-color: var(--primary);
+      font-weight: 600;
+    }
+  }
+}
+
+.cotizacion {
+  display: grid;
+  gap: var(--space-4);
+  overflow-wrap: anywhere;
+}
+
+.encabezado,
+.seguimiento {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+}
+
+.detalles {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--space-4);
+
+  div {
+    display: grid;
+    gap: var(--space-1);
+  }
+}
+
+.precio {
+  color: var(--primary);
+  font-size: var(--font-h3);
+}
+
+.seguimiento {
+  padding-top: var(--space-3);
+  border-top: 1px solid var(--border);
+}
+
+.vacio {
+  text-align: center;
+  padding: var(--space-5);
+}
+
+@media (max-width: 600px) {
+  .detalles {
+    grid-template-columns: 1fr;
+  }
+
+  .seguimiento button {
+    width: 100%;
+  }
+}

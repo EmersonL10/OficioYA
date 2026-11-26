@@ -1,0 +1,76 @@
+<header>
+  <h1>Bienvenido, {{ nombre() }}</h1>
+  <p>Consulta y administra la información general de OficioYA.</p>
+</header>
+
+<section class="indicadores" aria-label="Indicadores administrativos">
+  @for (item of indicadores(); track item.nombre) {
+    <article class="card indicador">
+      <span>{{ item.nombre }}</span>
+      <strong>{{ item.valor }}</strong>
+    </article>
+  }
+</section>
+
+<section class="card">
+  <div class="encabezado">
+    <h2>Usuarios recientes</h2>
+    <button type="button" class="btn btn-outline"
+            (click)="navegar.emit('usuarios')">
+      Ver todos los usuarios
+    </button>
+  </div>
+
+  <div class="tabla-contenedor">
+    <table>
+      <thead>
+        <tr>
+          <th>Usuario</th>
+          <th>Correo electrónico</th>
+          <th>Rol</th>
+          <th>Estado</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (usuario of usuariosRecientes(); track usuario.id) {
+          <tr>
+            <td>{{ usuario.nombres }} {{ usuario.apellidos }}</td>
+            <td>{{ usuario.correo }}</td>
+            <td>{{ usuario.rol }}</td>
+            <td>
+              <app-status [estado]="usuario.activo ? 'ACTIVO' : 'INACTIVO'" />
+            </td>
+          </tr>
+        } @empty {
+          <tr>
+            <td colspan="4">No hay usuarios registrados.</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section class="card">
+  <h2>Gestión administrativa</h2>
+
+  <div class="gestion">
+    <article>
+      <h3>Usuarios</h3>
+      <p>Consulta las cuentas registradas y sus respectivos roles.</p>
+      <button type="button" class="btn btn-outline"
+              (click)="navegar.emit('usuarios')">
+        Consultar usuarios
+      </button>
+    </article>
+
+    <article>
+      <h3>Categorías</h3>
+      <p>Administra las especialidades disponibles en la plataforma.</p>
+      <button type="button" class="btn btn-outline"
+              (click)="navegar.emit('categorias')">
+        Gestionar categorías
+      </button>
+    </article>
+  </div>
+</section>

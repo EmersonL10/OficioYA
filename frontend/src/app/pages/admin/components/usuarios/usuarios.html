@@ -1,0 +1,134 @@
+<header>
+  <h1>Gestión de usuarios</h1>
+  <p>Consulta las cuentas registradas en la plataforma.</p>
+</header>
+
+<section class="card filtros">
+  <div class="campos">
+    <div class="form-group">
+      <label for="buscar">Buscar usuario</label>
+      <input id="buscar" type="search"
+             placeholder="Nombre o correo electrónico"
+             [value]="busqueda()"
+             (input)="busqueda.set($any($event.target).value)">
+    </div>
+
+    <div class="form-group">
+      <label for="rol">Rol</label>
+      <select id="rol" [value]="rol()"
+              (change)="rol.set($any($event.target).value)">
+        <option value="TODOS">Todos los roles</option>
+        <option value="CLIENTE">Cliente</option>
+        <option value="PROFESIONAL">Profesional</option>
+        <option value="ADMIN">Administrador</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label for="estado">Estado</label>
+      <select id="estado" [value]="estado()"
+              (change)="estado.set($any($event.target).value)">
+        <option value="TODOS">Todos los estados</option>
+        <option value="ACTIVO">Activo</option>
+        <option value="INACTIVO">Inactivo</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="encabezado">
+    <small>{{ usuariosFiltrados().length }} de {{ usuarios().length }} usuarios</small>
+    <button type="button" class="btn btn-outline" (click)="limpiarFiltros()">
+      Limpiar filtros
+    </button>
+  </div>
+</section>
+
+<section class="card">
+  <h2>Usuarios registrados</h2>
+
+  <div class="tabla-contenedor">
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Nombre completo</th>
+          <th>Correo electrónico</th>
+          <th>Rol</th>
+          <th>Estado</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        @for (usuario of usuariosFiltrados(); track usuario.id) {
+          <tr>
+            <td>{{ usuario.id }}</td>
+            <td>{{ usuario.nombres }} {{ usuario.apellidos }}</td>
+            <td>{{ usuario.correo }}</td>
+            <td>{{ usuario.rol }}</td>
+            <td>
+              <app-status [estado]="usuario.activo ? 'ACTIVO' : 'INACTIVO'" />
+            </td>
+            <td>
+              <button type="button" class="btn btn-outline"
+                      (click)="verDetalle(usuario)">
+                Ver detalle
+              </button>
+            </td>
+          </tr>
+        } @empty {
+          <tr>
+            <td colspan="6" class="vacio">
+              No se encontraron usuarios con los filtros seleccionados.
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+</section>
+
+@if (seleccionado(); as usuario) {
+  <section class="card detalle">
+    <div class="encabezado">
+      <h2>Información del usuario #{{ usuario.id }}</h2>
+      <button type="button" class="btn btn-outline" (click)="cerrarDetalle()">
+        Cerrar
+      </button>
+    </div>
+
+    <dl class="informacion">
+      <div>
+        <dt>Nombre completo</dt>
+        <dd>{{ usuario.nombres }} {{ usuario.apellidos }}</dd>
+      </div>
+
+      <div>
+        <dt>Correo electrónico</dt>
+        <dd>{{ usuario.correo }}</dd>
+      </div>
+
+      <div>
+        <dt>Teléfono</dt>
+        <dd>{{ usuario.telefono || 'No registrado' }}</dd>
+      </div>
+
+      <div>
+        <dt>Rol</dt>
+        <dd>{{ usuario.rol }}</dd>
+      </div>
+
+      <div>
+        <dt>Fecha de registro</dt>
+        <dd>{{ usuario.fechaRegistro | date:'dd/MM/yyyy HH:mm' }}</dd>
+      </div>
+
+      <div>
+        <dt>Estado de cuenta</dt>
+        <dd>
+          <app-status [estado]="usuario.activo ? 'ACTIVO' : 'INACTIVO'" />
+        </dd>
+      </div>
+    </dl>
+  </section>
+}

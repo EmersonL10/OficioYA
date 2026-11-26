@@ -1,0 +1,88 @@
+:host {
+  display: grid;
+  gap: var(--space-4);
+}
+
+p, small {
+  color: var(--muted);
+}
+
+.valoracion {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  align-items: center;
+  gap: var(--space-5);
+}
+
+.promedio {
+  display: grid;
+  gap: var(--space-2);
+  text-align: center;
+
+  strong {
+    color: var(--primary);
+    font-size: 42px;
+    font-weight: 600;
+  }
+
+  span {
+    color: var(--muted);
+  }
+}
+
+.distribucion {
+  display: grid;
+  gap: var(--space-3);
+}
+
+.fila {
+  display: grid;
+  grid-template-columns: 65px 1fr 35px;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.barra {
+  height: 8px;
+  background: var(--background);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+
+.progreso {
+  height: 100%;
+  background: var(--primary);
+}
+
+.opinion {
+  display: grid;
+  gap: var(--space-3);
+  overflow-wrap: anywhere;
+
+  p {
+    white-space: pre-wrap;
+  }
+}
+
+.encabezado {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.puntuacion {
+  color: var(--primary);
+  font-size: var(--font-h3);
+}
+
+.vacio {
+  text-align: center;
+  padding: var(--space-5);
+}
+
+@media (max-width: 600px) {
+  .valoracion {
+    grid-template-columns: 1fr;
+  }
+}

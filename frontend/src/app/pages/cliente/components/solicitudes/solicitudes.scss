@@ -1,0 +1,86 @@
+:host {
+  display: grid;
+  gap: var(--space-4);
+}
+
+.encabezado,
+.acciones {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+}
+
+p, small {
+  color: var(--muted);
+}
+
+.formulario {
+  display: grid;
+  gap: var(--space-4);
+}
+
+.campos {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-4);
+}
+
+.solicitud {
+  display: grid;
+  gap: var(--space-3);
+  overflow-wrap: anywhere;
+}
+
+.categoria {
+  color: var(--primary);
+  font-size: var(--font-small);
+}
+
+.detalles {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--space-4);
+
+  div {
+    display: grid;
+    gap: var(--space-1);
+  }
+}
+
+.acciones {
+  justify-content: flex-end;
+  padding-top: var(--space-3);
+  border-top: 1px solid var(--border);
+}
+
+.btn-danger {
+  color: var(--danger);
+  background: var(--surface);
+  border-color: var(--danger);
+
+  &:hover {
+    background: #fef3f2;
+  }
+}
+
+.ng-invalid.ng-touched {
+  border-color: var(--danger);
+}
+
+.vacio {
+  padding: var(--space-5);
+  text-align: center;
+}
+
+@media (max-width: 600px) {
+  .campos, .detalles {
+    grid-template-columns: 1fr;
+  }
+
+  .acciones {
+    align-items: stretch;
+    flex-direction: column;
+  }
+}

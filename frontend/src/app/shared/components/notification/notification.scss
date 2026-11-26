@@ -1,0 +1,34 @@
+.notification {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px;
+  border: 1px solid;
+  border-left-width: 3px;
+  border-radius: var(--radius);
+  font-size: var(--font-small);
+
+  &[data-tipo='error'] {
+    background: #fef3f2;
+    color: var(--danger);
+  }
+
+  &[data-tipo='success'] {
+    background: #edf7ef;
+    color: var(--success);
+  }
+
+  &[data-tipo='info'] {
+    background: #eaf2f8;
+    color: var(--primary);
+  }
+
+  button {
+    background: transparent;
+    border: 0;
+    color: inherit;
+    font-weight: 600;
+    cursor: pointer;
+  }
+}

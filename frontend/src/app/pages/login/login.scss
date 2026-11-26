@@ -1,0 +1,107 @@
+.login-page {
+  padding-block: var(--space-6);
+}
+
+.login-container {
+  display: flex;
+  justify-content: center;
+}
+
+.login-card {
+  width: 100%;
+  max-width: 440px;
+  padding: var(--space-6);
+}
+
+.login-heading {
+  margin-bottom: var(--space-5);
+
+  h1 {
+    margin-bottom: var(--space-2);
+  }
+
+  p {
+    color: var(--muted);
+    margin: 0;
+  }
+}
+
+.password-field {
+  display: flex;
+  align-items: stretch;
+
+  input {
+    min-width: 0;
+    border-radius: var(--radius) 0 0 var(--radius);
+  }
+}
+
+.password-toggle {
+  padding-inline: var(--space-3);
+  border: 1px solid var(--border);
+  border-left: 0;
+  border-radius: 0 var(--radius) var(--radius) 0;
+  background: var(--surface);
+  color: var(--primary);
+  font-size: var(--font-small);
+
+  &:hover {
+    background: var(--background);
+  }
+}
+
+.login-button {
+  width: 100%;
+  margin-top: var(--space-2);
+}
+
+// Notificación general de error
+.error-message {
+  padding: var(--space-3);
+  margin-bottom: var(--space-4);
+  border: 1px solid var(--danger);
+  border-left: 3px solid var(--danger);
+  border-radius: var(--radius);
+  background: #fef3f2;
+  color: var(--danger);
+  font-size: var(--font-small);
+}
+
+// Resaltar campos incorrectos
+.form-group {
+  input.ng-invalid.ng-touched {
+    border-color: var(--danger);
+
+    &:focus {
+      outline-color: var(--danger);
+    }
+  }
+
+  .error {
+    display: block;
+    font-size: var(--font-small);
+    color: var(--danger);
+  }
+}
+
+.register-section {
+  margin-top: var(--space-5);
+  padding-top: var(--space-5);
+  border-top: 1px solid var(--border);
+  text-align: center;
+
+  p {
+    color: var(--muted);
+    margin-bottom: var(--space-2);
+  }
+
+  a {
+    font-weight: 500;
+  }
+}
+
+@media (max-width: 600px) {
+  .login-card {
+    padding: var(--space-5);
+  }
+}

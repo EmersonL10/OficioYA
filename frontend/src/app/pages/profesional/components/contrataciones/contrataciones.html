@@ -1,0 +1,85 @@
+<header>
+  <h1>Mis contrataciones</h1>
+  <p>Gestiona los servicios contratados por tus clientes.</p>
+</header>
+
+<nav class="filtros" aria-label="Filtrar contrataciones">
+  @for (item of filtros; track item.valor) {
+    <button type="button"
+            [class.activo]="filtro() === item.valor"
+            [attr.aria-pressed]="filtro() === item.valor"
+            (click)="filtro.set(item.valor)">
+      {{ item.nombre }} ({{ contar(item.valor) }})
+    </button>
+  }
+</nav>
+
+@for (contratacion of contratacionesFiltradas(); track contratacion.id) {
+  <article class="card contratacion">
+    <div class="encabezado">
+      <div>
+        <small>Contratación #{{ contratacion.id }}</small>
+        <h3>{{ contratacion.solicitudTitulo }}</h3>
+      </div>
+      <app-status [estado]="contratacion.estado" />
+    </div>
+
+    <div class="detalles">
+      <div>
+        <small>Cliente</small>
+        <strong>{{ contratacion.clienteNombre }}</strong>
+      </div>
+      <div>
+        <small>Monto acordado</small>
+        <strong class="precio">S/ {{ contratacion.monto | number:'1.2-2' }}</strong>
+      </div>
+      <div>
+        <small>Fecha de contratación</small>
+        <strong>{{ contratacion.fechaContratacion | date:'dd/MM/yyyy' }}</strong>
+      </div>
+    </div>
+
+    @if (contratacion.fechaInicio) {
+      <p>Inicio: {{ contratacion.fechaInicio | date:'dd/MM/yyyy HH:mm' }}</p>
+    }
+
+    @if (contratacion.fechaFinalizacion) {
+      <p>Finalización: {{ contratacion.fechaFinalizacion | date:'dd/MM/yyyy HH:mm' }}</p>
+    }
+
+    <div class="acciones">
+      @switch (contratacion.estado) {
+        @case ('PENDIENTE') {
+          <p>El servicio está pendiente de ejecución.</p>
+          <button type="button" class="btn btn-primary"
+                  [attr.aria-busy]="procesando()"
+                  (click)="iniciarServicio(contratacion)">
+            Iniciar servicio
+          </button>
+        }
+        @case ('EN_PROCESO') {
+          <p>Servicio en ejecución. El cliente deberá confirmar su finalización.</p>
+        }
+        @case ('FINALIZADA') {
+          <p>El servicio ha finalizado correctamente.</p>
+          <button type="button" class="btn btn-outline"
+                  (click)="navegar.emit('reputacion')">
+            Ver reputación
+          </button>
+        }
+        @case ('CANCELADA') {
+          <p>Esta contratación fue cancelada.</p>
+        }
+      }
+    </div>
+  </article>
+} @empty {
+  <section class="card vacio">
+    <h3>No hay contrataciones para mostrar</h3>
+    <p>Consulta tus cotizaciones o selecciona otro filtro.</p>
+    <button type="button" class="btn btn-outline"
+            (click)="navegar.emit('cotizaciones')">
+      Ver mis cotizaciones
+    </button>
+  </section>
+}
