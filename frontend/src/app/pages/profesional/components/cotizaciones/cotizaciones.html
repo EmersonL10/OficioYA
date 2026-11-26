@@ -1,0 +1,71 @@
+<header>
+  <h1>Mis cotizaciones</h1>
+  <p>Consulta el estado de las propuestas económicas que has enviado.</p>
+</header>
+
+<nav class="filtros" aria-label="Filtrar cotizaciones">
+  @for (item of filtros; track item.valor) {
+    <button type="button"
+            [class.activo]="filtro() === item.valor"
+            [attr.aria-pressed]="filtro() === item.valor"
+            (click)="filtro.set(item.valor)">
+      {{ item.nombre }} ({{ contar(item.valor) }})
+    </button>
+  }
+</nav>
+
+@for (cotizacion of cotizacionesFiltradas(); track cotizacion.id) {
+  <article class="card cotizacion">
+    <div class="encabezado">
+      <div>
+        <small>Cotización #{{ cotizacion.id }}</small>
+        <h3>{{ cotizacion.solicitudTitulo }}</h3>
+      </div>
+      <app-status [estado]="cotizacion.estado" />
+    </div>
+
+    <p>{{ cotizacion.descripcion }}</p>
+
+    <div class="detalles">
+      <div>
+        <small>Monto ofrecido</small>
+        <strong class="precio">S/ {{ cotizacion.monto | number:'1.2-2' }}</strong>
+      </div>
+      <div>
+        <small>Plazo de ejecución</small>
+        <strong>{{ cotizacion.plazoDias }} día(s)</strong>
+      </div>
+      <div>
+        <small>Fecha de envío</small>
+        <strong>{{ cotizacion.fechaEnvio | date:'dd/MM/yyyy' }}</strong>
+      </div>
+    </div>
+
+    <div class="seguimiento">
+      @switch (cotizacion.estado) {
+        @case ('PENDIENTE') {
+          <p>Esperando la respuesta del cliente.</p>
+        }
+        @case ('ACEPTADA') {
+          <p>El cliente ha aceptado tu propuesta.</p>
+          <button type="button" class="btn btn-primary"
+                  (click)="navegar.emit('contrataciones')">
+            Ver contrataciones
+          </button>
+        }
+        @case ('RECHAZADA') {
+          <p>Esta propuesta no fue seleccionada.</p>
+        }
+      }
+    </div>
+  </article>
+} @empty {
+  <section class="card vacio">
+    <h3>No hay cotizaciones para mostrar</h3>
+    <p>Consulta otras oportunidades o selecciona un filtro diferente.</p>
+    <button type="button" class="btn btn-outline"
+            (click)="navegar.emit('oportunidades')">
+      Explorar oportunidades
+    </button>
+  </section>
+}

@@ -1,0 +1,62 @@
+<header>
+  <h1>Mi reputación</h1>
+  <p>Consulta las valoraciones y experiencias de tus clientes.</p>
+</header>
+
+@if (!perfil()) {
+  <section class="card vacio">
+    <h2>Completa tu perfil profesional</h2>
+    <p>Necesitas un perfil para comenzar a construir tu reputación.</p>
+    <button type="button" class="btn btn-primary" (click)="navegar.emit('perfil')">
+      Completar perfil
+    </button>
+  </section>
+} @else {
+  <section class="card valoracion">
+    <div class="promedio">
+      <h2>Valoración general</h2>
+      <strong>{{ total() ? (promedio() | number:'1.1-1') : '—' }}</strong>
+      <span>De un máximo de 5 puntos</span>
+      <small>{{ total() }} calificaciones recibidas</small>
+    </div>
+
+    <div class="distribucion">
+      @for (item of distribucion(); track item.puntuacion) {
+        <div class="fila">
+          <span>{{ item.puntuacion }} puntos</span>
+          <div class="barra" role="progressbar"
+               [attr.aria-label]="item.puntuacion + ' puntos'"
+               [attr.aria-valuenow]="item.porcentaje"
+               aria-valuemin="0" aria-valuemax="100">
+            <div class="progreso" [style.width.%]="item.porcentaje"></div>
+          </div>
+          <span>{{ item.cantidad }}</span>
+        </div>
+      }
+    </div>
+  </section>
+
+  <h2>Opiniones de clientes</h2>
+
+  @for (calificacion of recientes(); track calificacion.id) {
+    <article class="card opinion">
+      <div class="encabezado">
+        <div>
+          <h3>{{ calificacion.clienteNombre }}</h3>
+          <small>{{ calificacion.fechaCalificacion | date:'dd/MM/yyyy' }}</small>
+        </div>
+        <strong class="puntuacion">{{ calificacion.puntuacion }}/5</strong>
+      </div>
+
+      <p>{{ calificacion.comentario || 'El cliente no dejó un comentario.' }}</p>
+    </article>
+  } @empty {
+    <section class="card vacio">
+      <h3>Aún no tienes calificaciones</h3>
+      <p>Las valoraciones aparecerán cuando tus clientes califiquen los servicios finalizados.</p>
+      <button type="button" class="btn btn-outline" (click)="navegar.emit('contrataciones')">
+        Ver contrataciones
+      </button>
+    </section>
+  }
+}

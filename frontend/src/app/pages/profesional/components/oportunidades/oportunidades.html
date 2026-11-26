@@ -1,0 +1,119 @@
+<header>
+  <h1>Oportunidades laborales</h1>
+  <p>Encuentra solicitudes relacionadas con tu especialidad.</p>
+</header>
+
+<app-notification [mensaje]="error()" tipo="error" (cerrar)="error.set('')" />
+
+@if (!perfil()) {
+  <section class="card vacio">
+    <h2>Completa tu perfil profesional</h2>
+    <p>Necesitas registrar tu especialidad para consultar oportunidades.</p>
+    <button type="button" class="btn btn-primary" (click)="navegar.emit('perfil')">
+      Completar perfil
+    </button>
+  </section>
+} @else {
+  @if (!perfil()?.disponible) {
+    <section class="card aviso">
+      <p>Activa tu disponibilidad para enviar cotizaciones.</p>
+      <button type="button" class="btn btn-outline" (click)="navegar.emit('perfil')">
+        Gestionar disponibilidad
+      </button>
+    </section>
+  }
+
+  <section class="card buscador">
+    <div class="form-group">
+      <label for="buscar">Buscar oportunidades</label>
+      <input id="buscar" type="search"
+             placeholder="Buscar por título, descripción o especialidad"
+             [value]="busqueda()"
+             (input)="busqueda.set($any($event.target).value)">
+    </div>
+    <small>{{ solicitudesFiltradas().length }} oportunidades encontradas</small>
+  </section>
+
+  @for (solicitud of solicitudesFiltradas(); track solicitud.id) {
+    <article class="card oportunidad">
+      <div class="encabezado">
+        <div>
+          <span class="categoria">{{ solicitud.categoriaNombre }}</span>
+          <h3>{{ solicitud.titulo }}</h3>
+        </div>
+        <strong class="precio">S/ {{ solicitud.presupuesto | number:'1.2-2' }}</strong>
+      </div>
+
+      <p>{{ solicitud.descripcion }}</p>
+
+      <small>Publicada el {{ solicitud.fechaCreacion | date:'dd/MM/yyyy' }}</small>
+
+      <div class="acciones">
+        @if (yaCotizada(solicitud.id)) {
+          <span class="success">Propuesta enviada</span>
+          <button type="button" class="btn btn-outline" (click)="navegar.emit('cotizaciones')">
+            Ver mis cotizaciones
+          </button>
+        } @else {
+          <button type="button" class="btn btn-primary" (click)="abrirCotizacion(solicitud)">
+            Enviar cotización
+          </button>
+        }
+      </div>
+
+      @if (seleccionada() === solicitud.id) {
+        <form class="propuesta" [formGroup]="formulario"
+              (ngSubmit)="enviar()" novalidate>
+
+          <h3>Preparar propuesta económica</h3>
+
+          <div class="campos">
+            <div class="form-group">
+              <label for="monto">Monto ofrecido (S/)</label>
+              <input id="monto" type="number" formControlName="monto"
+                     min="0.01" step="0.01">
+
+              @if (formulario.controls.monto.touched && formulario.controls.monto.invalid) {
+                <span class="error">Ingresa un monto válido entre S/ 0.01 y S/ 99,999,999.99.</span>
+              }
+            </div>
+
+            <div class="form-group">
+              <label for="plazo">Plazo de ejecución (días)</label>
+              <input id="plazo" type="number" formControlName="plazoDias"
+                     min="1" max="365" step="1">
+
+              @if (formulario.controls.plazoDias.touched && formulario.controls.plazoDias.invalid) {
+                <span class="error">Ingresa un plazo entre 1 y 365 días.</span>
+              }
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="propuesta">Descripción de la propuesta</label>
+            <textarea id="propuesta" formControlName="descripcion" rows="5"
+                      placeholder="Explica cómo realizarás el servicio."></textarea>
+
+            @if (formulario.controls.descripcion.touched && formulario.controls.descripcion.invalid) {
+              <span class="error">Ingresa una descripción de 10 a 2000 caracteres.</span>
+            }
+          </div>
+
+          <div class="acciones">
+            <button type="button" class="btn btn-outline" (click)="cerrarFormulario()">
+              Cancelar
+            </button>
+            <button type="submit" class="btn btn-primary" [attr.aria-busy]="procesando()">
+              {{ procesando() ? 'Enviando...' : 'Confirmar propuesta' }}
+            </button>
+          </div>
+        </form>
+      }
+    </article>
+  } @empty {
+    <section class="card vacio">
+      <h3>No se encontraron oportunidades</h3>
+      <p>Prueba otra búsqueda o consulta nuevamente más adelante.</p>
+    </section>
+  }
+}
