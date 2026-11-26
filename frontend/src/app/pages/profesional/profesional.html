@@ -1,1 +1,1107 @@
-<p>profesional works!</p>
+<section class="dashboard-page">
+  <div class="container dashboard-layout">
+
+    <!-- Navegación lateral -->
+    <aside class="dashboard-sidebar card">
+
+      <div class="sidebar-profile">
+
+        <span class="profile-label">Cuenta profesional</span>
+
+        <h3>
+          {{ auth.usuario()?.nombres }}
+          {{ auth.usuario()?.apellidos }}
+        </h3>
+
+        <span class="profile-email">
+          {{ auth.usuario()?.correo }}
+        </span>
+
+        @if (perfil(); as datos) {
+
+          <p class="category-label">
+            {{ datos.categoriaNombre }}
+          </p>
+
+          <span
+            class="status"
+            [attr.data-estado]="
+              datos.disponible ? 'DISPONIBLE' : 'NO_DISPONIBLE'
+            "
+          >
+            {{ datos.disponible ? 'Disponible' : 'No disponible' }}
+          </span>
+
+        }
+
+      </div>
+
+      <nav class="sidebar-nav" aria-label="Panel profesional">
+
+        <button
+          type="button"
+          [class.active]="seccion() === 'resumen'"
+          (click)="cambiarSeccion('resumen')"
+        >
+          Resumen
+        </button>
+
+        <button
+          type="button"
+          [class.active]="seccion() === 'perfil'"
+          (click)="cambiarSeccion('perfil')"
+        >
+          Mi perfil profesional
+        </button>
+
+        <button
+          type="button"
+          [class.active]="seccion() === 'solicitudes'"
+          (click)="cambiarSeccion('solicitudes')"
+        >
+          Oportunidades laborales
+        </button>
+
+        <button
+          type="button"
+          [class.active]="seccion() === 'cotizaciones'"
+          (click)="cambiarSeccion('cotizaciones')"
+        >
+          Mis cotizaciones
+        </button>
+
+        <button
+          type="button"
+          [class.active]="seccion() === 'contrataciones'"
+          (click)="cambiarSeccion('contrataciones')"
+        >
+          Mis contrataciones
+        </button>
+
+        <button
+          type="button"
+          [class.active]="seccion() === 'reputacion'"
+          (click)="cambiarSeccion('reputacion')"
+        >
+          Mi reputación
+        </button>
+
+      </nav>
+
+      @if (perfil(); as datos) {
+
+        <button
+          type="button"
+          class="btn btn-outline sidebar-action"
+          (click)="cambiarDisponibilidad()"
+        >
+          {{ datos.disponible
+            ? 'Desactivar disponibilidad'
+            : 'Activar disponibilidad' }}
+        </button>
+
+      }
+
+    </aside>
+
+    <!-- Contenido principal -->
+    <div class="dashboard-content">
+
+      @if (error()) {
+
+        <div class="notification notification-error" role="alert">
+
+          <span>{{ error() }}</span>
+
+          <button type="button" (click)="limpiarMensajes()">
+            Cerrar
+          </button>
+
+        </div>
+
+      }
+
+      @if (exito()) {
+
+        <div class="notification notification-success" role="status">
+
+          <span>{{ exito() }}</span>
+
+          <button type="button" (click)="limpiarMensajes()">
+            Cerrar
+          </button>
+
+        </div>
+
+      }
+
+      @if (cargando()) {
+
+        <div class="card loading-state" role="status">
+          Cargando información profesional...
+        </div>
+
+      } @else {
+
+        @switch (seccion()) {
+
+          <!-- RESUMEN -->
+          @case ('resumen') {
+
+            <header class="section-heading">
+
+              <div>
+
+                <h1>Panel del profesional</h1>
+
+                <p>
+                  Bienvenido, {{ auth.usuario()?.nombres }}.
+                  Administra tu actividad profesional.
+                </p>
+
+              </div>
+
+              <button
+                type="button"
+                class="btn btn-outline"
+                (click)="cargarDatos()"
+              >
+                Actualizar
+              </button>
+
+            </header>
+
+            <div class="metrics-grid">
+
+              <article class="card metric">
+                <span>Oportunidades disponibles</span>
+                <strong>{{ totalOportunidades() }}</strong>
+              </article>
+
+              <article class="card metric">
+                <span>Cotizaciones pendientes</span>
+                <strong>{{ cotizacionesPendientes() }}</strong>
+              </article>
+
+              <article class="card metric">
+                <span>Servicios activos</span>
+                <strong>{{ serviciosActivos() }}</strong>
+              </article>
+
+              <article class="card metric">
+                <span>Servicios finalizados</span>
+                <strong>{{ serviciosFinalizados() }}</strong>
+              </article>
+
+            </div>
+
+            <div class="summary-grid">
+
+              <article class="card summary-card">
+
+                <h2>Monto de servicios finalizados</h2>
+
+                <strong class="summary-value">
+                  S/ {{ ingresosGenerados() | number:'1.2-2' }}
+                </strong>
+
+                <p>Importe acumulado de servicios completados.</p>
+
+              </article>
+
+              <article class="card summary-card">
+
+                <h2>Reputación profesional</h2>
+
+                <strong class="summary-value">
+                  {{ promedio() | number:'1.1-1' }} / 5
+                </strong>
+
+                <p>
+                  {{ calificaciones().length }} evaluaciones recibidas.
+                </p>
+
+              </article>
+
+            </div>
+
+            <section class="card">
+
+              <div class="section-toolbar">
+
+                <h2>Oportunidades laborales</h2>
+
+                <button
+                  type="button"
+                  class="btn btn-outline"
+                  (click)="cambiarSeccion('solicitudes')"
+                >
+                  Ver todas
+                </button>
+
+              </div>
+
+              @for (
+                solicitud of solicitudes().slice(0, 5);
+                track solicitud.id
+              ) {
+
+                <article class="recent-item">
+
+                  <div>
+
+                    <h3>{{ solicitud.titulo }}</h3>
+
+                    <p>
+                      {{ solicitud.categoriaNombre }} ·
+                      S/ {{ solicitud.presupuesto | number:'1.2-2' }}
+                    </p>
+
+                  </div>
+
+                  <span class="status" data-estado="ABIERTA">
+                    ABIERTA
+                  </span>
+
+                </article>
+
+              } @empty {
+
+                <div class="empty-state">
+                  <h3>No hay oportunidades disponibles</h3>
+                  <p>Las nuevas solicitudes aparecerán aquí.</p>
+                </div>
+
+              }
+
+            </section>
+
+          }
+
+          <!-- PERFIL PROFESIONAL -->
+          @case ('perfil') {
+
+            <header class="section-heading">
+
+              <div>
+
+                <h1>Mi perfil profesional</h1>
+
+                <p>
+                  Configura tu especialidad y experiencia laboral.
+                </p>
+
+              </div>
+
+            </header>
+
+            @if (!perfil()) {
+
+              <div class="notification notification-info">
+                Completa tu perfil para comenzar a ofrecer servicios
+                y enviar cotizaciones.
+              </div>
+
+            }
+
+            <section class="card form-card">
+
+              <h2>
+                {{ perfil() ? 'Información profesional' : 'Crear perfil' }}
+              </h2>
+
+              <form
+                [formGroup]="formularioPerfil"
+                (ngSubmit)="guardarPerfil()"
+                novalidate
+              >
+
+                <div class="form-group">
+
+                  <label for="categoria">Especialidad profesional</label>
+
+                  <select id="categoria" formControlName="categoriaId">
+
+                    <option [ngValue]="null">
+                      Selecciona una especialidad
+                    </option>
+
+                    @for (categoria of categorias(); track categoria.id) {
+
+                      <option [ngValue]="categoria.id">
+                        {{ categoria.nombre }}
+                      </option>
+
+                    }
+
+                  </select>
+
+                  @if (
+                    formularioPerfil.controls.categoriaId.touched &&
+                    formularioPerfil.controls.categoriaId.invalid
+                  ) {
+
+                    <span class="error">
+                      Debes seleccionar una especialidad.
+                    </span>
+
+                  }
+
+                </div>
+
+                <div class="form-group">
+
+                  <label for="experiencia">
+                    Años de experiencia
+                  </label>
+
+                  <input
+                    id="experiencia"
+                    type="number"
+                    formControlName="experienciaAnios"
+                    placeholder="Ej. 5"
+                    min="0"
+                    max="70"
+                    step="1"
+                  />
+
+                  @if (
+                    formularioPerfil.controls.experienciaAnios.touched &&
+                    formularioPerfil.controls.experienciaAnios.invalid
+                  ) {
+
+                    <span class="error">
+                      Ingresa una experiencia válida entre 0 y 70 años.
+                    </span>
+
+                  }
+
+                </div>
+
+                <div class="form-group">
+
+                  <label for="descripcion-perfil">
+                    Descripción profesional
+                  </label>
+
+                  <textarea
+                    id="descripcion-perfil"
+                    formControlName="descripcion"
+                    placeholder="Describe tu experiencia, conocimientos y servicios."
+                    rows="6"
+                  ></textarea>
+
+                  @if (
+                    formularioPerfil.controls.descripcion.touched &&
+                    formularioPerfil.controls.descripcion.invalid
+                  ) {
+
+                    <span class="error">
+                      Ingresa una descripción de 10 a 1000 caracteres.
+                    </span>
+
+                  }
+
+                </div>
+
+                <div class="form-actions">
+
+                  <button
+                    type="submit"
+                    class="btn btn-primary"
+                    [attr.aria-busy]="procesando()"
+                  >
+                    {{ procesando()
+                      ? 'Guardando...'
+                      : perfil()
+                        ? 'Guardar cambios'
+                        : 'Crear perfil profesional' }}
+                  </button>
+
+                </div>
+
+              </form>
+
+            </section>
+
+          }
+
+          <!-- OPORTUNIDADES LABORALES -->
+          @case ('solicitudes') {
+
+            <header class="section-heading">
+
+              <div>
+
+                <h1>Oportunidades laborales</h1>
+
+                <p>
+                  Encuentra solicitudes relacionadas con tu especialidad.
+                </p>
+
+              </div>
+
+              <button
+                type="button"
+                class="btn btn-outline"
+                (click)="cargarDatos()"
+              >
+                Actualizar
+              </button>
+
+            </header>
+
+            @if (!perfil()?.disponible) {
+
+              <div class="notification notification-info">
+                Activa tu disponibilidad para enviar cotizaciones.
+              </div>
+
+            }
+
+            <div class="records-list">
+
+              @for (solicitud of solicitudes(); track solicitud.id) {
+
+                <article class="card record-card">
+
+                  <div class="record-heading">
+
+                    <div>
+
+                      <span class="category-label">
+                        {{ solicitud.categoriaNombre }}
+                      </span>
+
+                      <h3>{{ solicitud.titulo }}</h3>
+
+                    </div>
+
+                    <span class="status" data-estado="ABIERTA">
+                      ABIERTA
+                    </span>
+
+                  </div>
+
+                  <p class="record-description">
+                    {{ solicitud.descripcion }}
+                  </p>
+
+                  <div class="record-details">
+
+                    <div>
+
+                      <span>Presupuesto estimado</span>
+
+                      <strong class="price">
+                        S/ {{ solicitud.presupuesto | number:'1.2-2' }}
+                      </strong>
+
+                    </div>
+
+                    <div>
+
+                      <span>Fecha de publicación</span>
+
+                      <strong>
+                        {{ solicitud.fechaCreacion | date:'dd/MM/yyyy' }}
+                      </strong>
+
+                    </div>
+
+                  </div>
+
+                  <div class="record-actions">
+
+                    <button
+                      type="button"
+                      class="btn btn-primary"
+                      (click)="abrirCotizacion(solicitud)"
+                    >
+                      {{ yaCotizada(solicitud.id)
+                        ? 'Cotización enviada'
+                        : 'Enviar cotización' }}
+                    </button>
+
+                  </div>
+
+                  <!-- Formulario de cotización -->
+                  @if (solicitudSeleccionada()?.id === solicitud.id) {
+
+                    <form
+                      class="quotation-form"
+                      [formGroup]="formularioCotizacion"
+                      (ngSubmit)="guardarCotizacion()"
+                      novalidate
+                    >
+
+                      <h3>Propuesta económica</h3>
+
+                      <div class="form-grid">
+
+                        <div class="form-group">
+
+                          <label for="monto">Monto ofrecido (S/)</label>
+
+                          <input
+                            id="monto"
+                            type="number"
+                            formControlName="monto"
+                            min="0.01"
+                            step="0.01"
+                            placeholder="0.00"
+                          />
+
+                          @if (
+                            formularioCotizacion.controls.monto.touched &&
+                            formularioCotizacion.controls.monto.invalid
+                          ) {
+
+                            <span class="error">
+                              Ingresa un monto válido mayor o igual a S/ 0.01.
+                            </span>
+
+                          }
+
+                        </div>
+
+                        <div class="form-group">
+
+                          <label for="plazo">Plazo de ejecución (días)</label>
+
+                          <input
+                            id="plazo"
+                            type="number"
+                            formControlName="plazoDias"
+                            min="1"
+                            max="365"
+                            step="1"
+                            placeholder="Ej. 3"
+                          />
+
+                          @if (
+                            formularioCotizacion.controls.plazoDias.touched &&
+                            formularioCotizacion.controls.plazoDias.invalid
+                          ) {
+
+                            <span class="error">
+                              Ingresa un plazo válido entre 1 y 365 días.
+                            </span>
+
+                          }
+
+                        </div>
+
+                      </div>
+
+                      <div class="form-group">
+
+                        <label for="propuesta">Descripción de la propuesta</label>
+
+                        <textarea
+                          id="propuesta"
+                          formControlName="descripcion"
+                          placeholder="Explica cómo realizarás el servicio."
+                          rows="5"
+                        ></textarea>
+
+                        @if (
+                          formularioCotizacion.controls.descripcion.touched &&
+                          formularioCotizacion.controls.descripcion.invalid
+                        ) {
+
+                          <span class="error">
+                            Ingresa una propuesta de 10 a 2000 caracteres.
+                          </span>
+
+                        }
+
+                      </div>
+
+                      <div class="form-actions">
+
+                        <button
+                          type="button"
+                          class="btn btn-outline"
+                          (click)="cerrarCotizacion()"
+                        >
+                          Cancelar
+                        </button>
+
+                        <button
+                          type="submit"
+                          class="btn btn-primary"
+                          [attr.aria-busy]="procesando()"
+                        >
+                          {{ procesando()
+                            ? 'Enviando...'
+                            : 'Confirmar cotización' }}
+                        </button>
+
+                      </div>
+
+                    </form>
+
+                  }
+
+                </article>
+
+              } @empty {
+
+                <div class="card empty-state">
+
+                  <h3>No hay solicitudes disponibles</h3>
+
+                  <p>
+                    Las oportunidades de tu especialidad aparecerán aquí.
+                  </p>
+
+                </div>
+
+              }
+
+            </div>
+
+          }
+
+          <!-- COTIZACIONES -->
+          @case ('cotizaciones') {
+
+            <header class="section-heading">
+
+              <div>
+
+                <h1>Mis cotizaciones</h1>
+
+                <p>Consulta el estado de tus propuestas económicas.</p>
+
+              </div>
+
+              <button
+                type="button"
+                class="btn btn-outline"
+                (click)="cargarDatos()"
+              >
+                Actualizar
+              </button>
+
+            </header>
+
+            <div class="records-list">
+
+              @for (cotizacion of cotizaciones(); track cotizacion.id) {
+
+                <article class="card record-card">
+
+                  <div class="record-heading">
+
+                    <div>
+
+                      <span class="category-label">
+                        Cotización #{{ cotizacion.id }}
+                      </span>
+
+                      <h3>{{ cotizacion.solicitudTitulo }}</h3>
+
+                    </div>
+
+                    <span
+                      class="status"
+                      [attr.data-estado]="cotizacion.estado"
+                    >
+                      {{ cotizacion.estado }}
+                    </span>
+
+                  </div>
+
+                  <p class="record-description">
+                    {{ cotizacion.descripcion }}
+                  </p>
+
+                  <div class="record-details">
+
+                    <div>
+
+                      <span>Monto ofrecido</span>
+
+                      <strong class="price">
+                        S/ {{ cotizacion.monto | number:'1.2-2' }}
+                      </strong>
+
+                    </div>
+
+                    <div>
+
+                      <span>Plazo de ejecución</span>
+
+                      <strong>{{ cotizacion.plazoDias }} día(s)</strong>
+
+                    </div>
+
+                    <div>
+
+                      <span>Fecha de envío</span>
+
+                      <strong>
+                        {{ cotizacion.fechaEnvio | date:'dd/MM/yyyy' }}
+                      </strong>
+
+                    </div>
+
+                  </div>
+
+                  @if (cotizacion.estado === 'PENDIENTE') {
+
+                    <p class="muted">
+                      Esperando la respuesta del cliente.
+                    </p>
+
+                  } @else if (cotizacion.estado === 'ACEPTADA') {
+
+                    <p class="success">
+                      El cliente ha aceptado tu propuesta.
+                    </p>
+
+                  }
+
+                </article>
+
+              } @empty {
+
+                <div class="card empty-state">
+
+                  <h3>Todavía no tienes cotizaciones</h3>
+
+                  <p>Consulta las oportunidades laborales disponibles.</p>
+
+                  <button
+                    type="button"
+                    class="btn btn-primary"
+                    (click)="cambiarSeccion('solicitudes')"
+                  >
+                    Buscar oportunidades
+                  </button>
+
+                </div>
+
+              }
+
+            </div>
+
+          }
+
+          <!-- CONTRATACIONES -->
+          @case ('contrataciones') {
+
+            <header class="section-heading">
+
+              <div>
+
+                <h1>Mis contrataciones</h1>
+
+                <p>Administra los servicios que te han contratado.</p>
+
+              </div>
+
+              <button
+                type="button"
+                class="btn btn-outline"
+                (click)="cargarDatos()"
+              >
+                Actualizar
+              </button>
+
+            </header>
+
+            <div class="records-list">
+
+              @for (
+                contratacion of contrataciones();
+                track contratacion.id
+              ) {
+
+                <article class="card record-card">
+
+                  <div class="record-heading">
+
+                    <div>
+
+                      <span class="category-label">
+                        Contratación #{{ contratacion.id }}
+                      </span>
+
+                      <h3>{{ contratacion.solicitudTitulo }}</h3>
+
+                    </div>
+
+                    <span
+                      class="status"
+                      [attr.data-estado]="contratacion.estado"
+                    >
+                      {{ contratacion.estado.replace('_', ' ') }}
+                    </span>
+
+                  </div>
+
+                  <div class="record-details">
+
+                    <div>
+
+                      <span>Cliente</span>
+
+                      <strong>{{ contratacion.clienteNombre }}</strong>
+
+                    </div>
+
+                    <div>
+
+                      <span>Monto acordado</span>
+
+                      <strong class="price">
+                        S/ {{ contratacion.monto | number:'1.2-2' }}
+                      </strong>
+
+                    </div>
+
+                    <div>
+
+                      <span>Fecha de contratación</span>
+
+                      <strong>
+                        {{ contratacion.fechaContratacion | date:'dd/MM/yyyy' }}
+                      </strong>
+
+                    </div>
+
+                  </div>
+
+                  @if (contratacion.fechaInicio) {
+
+                    <p class="muted">
+                      Inicio:
+                      {{ contratacion.fechaInicio | date:'dd/MM/yyyy HH:mm' }}
+                    </p>
+
+                  }
+
+                  @if (contratacion.fechaFinalizacion) {
+
+                    <p class="muted">
+                      Finalización:
+                      {{ contratacion.fechaFinalizacion | date:'dd/MM/yyyy HH:mm' }}
+                    </p>
+
+                  }
+
+                  <div class="record-actions">
+
+                    @switch (contratacion.estado) {
+
+                      @case ('PENDIENTE') {
+
+                        <button
+                          type="button"
+                          class="btn btn-primary"
+                          (click)="iniciarServicio(contratacion)"
+                        >
+                          Iniciar servicio
+                        </button>
+
+                      }
+
+                      @case ('EN_PROCESO') {
+
+                        <span class="muted">
+                          Servicio en ejecución. El cliente debe confirmar
+                          su finalización.
+                        </span>
+
+                      }
+
+                      @case ('FINALIZADA') {
+
+                        <span class="success">
+                          Servicio completado correctamente.
+                        </span>
+
+                      }
+
+                      @case ('CANCELADA') {
+
+                        <span class="muted">
+                          Esta contratación fue cancelada.
+                        </span>
+
+                      }
+
+                    }
+
+                  </div>
+
+                </article>
+
+              } @empty {
+
+                <div class="card empty-state">
+
+                  <h3>No tienes contrataciones registradas</h3>
+
+                  <p>
+                    Los servicios aceptados por los clientes aparecerán aquí.
+                  </p>
+
+                </div>
+
+              }
+
+            </div>
+
+          }
+
+          <!-- REPUTACIÓN -->
+          @case ('reputacion') {
+
+            <header class="section-heading">
+
+              <div>
+
+                <h1>Mi reputación</h1>
+
+                <p>Consulta las evaluaciones realizadas por tus clientes.</p>
+
+              </div>
+
+              <button
+                type="button"
+                class="btn btn-outline"
+                (click)="cargarDatos()"
+              >
+                Actualizar
+              </button>
+
+            </header>
+
+            <section class="card reputation-summary">
+
+              <div>
+
+                <span class="muted">Puntuación promedio</span>
+
+                <strong class="reputation-score">
+                  {{ promedio() | number:'1.1-1' }}
+                  <small>/ 5</small>
+                </strong>
+
+                <p>
+                  Basado en {{ calificaciones().length }} evaluaciones.
+                </p>
+
+              </div>
+
+            </section>
+
+            <div class="records-list">
+
+              @for (
+                calificacion of calificaciones();
+                track calificacion.id
+              ) {
+
+                <article class="card review-card">
+
+                  <div class="record-heading">
+
+                    <div>
+
+                      <h3>{{ calificacion.clienteNombre }}</h3>
+
+                      <span class="muted">
+                        {{ calificacion.fechaCalificacion | date:'dd/MM/yyyy' }}
+                      </span>
+
+                    </div>
+
+                    <span class="review-score">
+                      {{ calificacion.puntuacion }} / 5
+                    </span>
+
+                  </div>
+
+                  <p class="record-description">
+                    {{ calificacion.comentario || 'Sin comentario adicional.' }}
+                  </p>
+
+                </article>
+
+              } @empty {
+
+                <div class="card empty-state">
+
+                  <h3>Todavía no tienes evaluaciones</h3>
+
+                  <p>
+                    Los clientes podrán calificar tus servicios finalizados.
+                  </p>
+
+                </div>
+
+              }
+
+            </div>
+
+          }
+
+        }
+
+      }
+
+    </div>
+
+  </div>
+
+  <!-- Confirmación de operaciones -->
+  @if (confirmacion(); as operacion) {
+
+    <div class="modal-overlay">
+
+      <section
+        class="confirmation-modal card"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="confirmation-title"
+        aria-describedby="confirmation-description"
+      >
+
+        <h2 id="confirmation-title">Confirmar operación</h2>
+
+        <p id="confirmation-description">
+          {{ operacion.mensaje }}
+        </p>
+
+        <div class="form-actions">
+
+          <button
+            type="button"
+            class="btn btn-outline"
+            (click)="cancelarConfirmacion()"
+          >
+            Volver
+          </button>
+
+          <button
+            type="button"
+            class="btn btn-primary"
+            (click)="confirmarOperacion()"
+          >
+            Confirmar
+          </button>
+
+        </div>
+
+      </section>
+
+    </div>
+
+  }
+
+</section>
