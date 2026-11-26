@@ -1,0 +1,35 @@
+<header>
+  <h1>Panel del cliente</h1>
+  <p>Bienvenido, {{ nombre() }}. Administra tus solicitudes y servicios.</p>
+</header>
+
+<div class="indicadores">
+  @for (item of indicadores(); track item.nombre) {
+    <article class="card indicador">
+      <span>{{ item.nombre }}</span>
+      <strong>{{ item.valor }}</strong>
+    </article>
+  }
+</div>
+
+<section class="card">
+  <div class="encabezado">
+    <h2>Solicitudes recientes</h2>
+    <button class="btn btn-outline" (click)="verSolicitudes.emit()">Ver todas</button>
+  </div>
+
+  @for (solicitud of recientes(); track solicitud.id) {
+    <article class="solicitud">
+      <div>
+        <h3>{{ solicitud.titulo }}</h3>
+        <p>{{ solicitud.categoriaNombre }} · S/ {{ solicitud.presupuesto | number:'1.2-2' }}</p>
+      </div>
+      <app-status [estado]="solicitud.estado" />
+    </article>
+  } @empty {
+    <div class="vacio">
+      <p>Todavía no tienes solicitudes registradas.</p>
+      <button class="btn btn-primary" (click)="nuevaSolicitud.emit()">Publicar solicitud</button>
+    </div>
+  }
+</section>

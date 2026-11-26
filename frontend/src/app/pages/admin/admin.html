@@ -1,0 +1,55 @@
+<app-dashboard-layout
+  titulo="Panel administrador"
+  [nombre]="auth.usuario()?.nombres ?? ''"
+  [correo]="auth.usuario()?.correo ?? ''"
+  [menu]="menu"
+  [seccion]="seccion()"
+  (seleccionar)="cambiarSeccion($event)">
+
+  <button
+    sidebar-actions
+    type="button"
+    class="btn btn-outline"
+    (click)="cerrarSesion()">
+    Cerrar sesión
+  </button>
+
+  <div class="contenido">
+    <app-notification
+      [mensaje]="mensaje()"
+      [tipo]="tipoMensaje()"
+      (cerrar)="mensaje.set('')" />
+
+    @if (cargando()) {
+      <p class="cargando" role="status">Actualizando información...</p>
+    }
+
+    @switch (seccion()) {
+      @case ('resumen') {
+        <app-resumen
+          [nombre]="auth.usuario()?.nombres ?? ''"
+          [usuarios]="usuarios()"
+          [categorias]="categorias()"
+          (navegar)="cambiarSeccion($event)" />
+      }
+
+      @case ('usuarios') {
+        <app-usuarios [usuarios]="usuarios()" />
+      }
+
+      @case ('categorias') {
+        <app-categorias
+          [categorias]="categorias()"
+          [procesando]="procesando() || cargando()"
+          (guardar)="guardarCategoria($event)"
+          (cambiarEstado)="cambiarEstadoCategoria($event)" />
+      }
+    }
+  </div>
+</app-dashboard-layout>
+
+<app-confirm-dialog
+  titulo="Confirmar operación"
+  [mensaje]="mensajeConfirmacion()"
+  (confirmar)="ejecutarConfirmacion()"
+  (cancelar)="cancelarConfirmacion()" />

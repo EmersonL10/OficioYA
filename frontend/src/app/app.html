@@ -1,0 +1,11 @@
+@if (!esAdministrativo()) {
+  <app-navbar />
+}
+
+<main>
+  <router-outlet />
+</main>
+
+@if (!esAdministrativo()) {
+  <app-footer />
+}

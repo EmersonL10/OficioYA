@@ -1,0 +1,90 @@
+<app-dashboard-layout
+  titulo="Panel del cliente"
+  [nombre]="auth.usuario()?.nombres ?? ''"
+  [correo]="auth.usuario()?.correo ?? ''"
+  [menu]="menu"
+  [seccion]="seccion()"
+  (seleccionar)="cambiarSeccion($event)">
+
+  <div class="contenido">
+    <app-notification
+      [mensaje]="mensaje()"
+      [tipo]="tipoMensaje()"
+      (cerrar)="mensaje.set('')" />
+
+    @if (cargando()) {
+      <p class="cargando" role="status">Actualizando información...</p>
+    }
+
+    @switch (seccion()) {
+      @case ('resumen') {
+        <app-resumen
+          [nombre]="auth.usuario()?.nombres ?? ''"
+          [solicitudes]="solicitudes()"
+          [contrataciones]="contrataciones()"
+          (verSolicitudes)="cambiarSeccion('solicitudes')"
+          (nuevaSolicitud)="cambiarSeccion('solicitudes')" />
+      }
+
+      @case ('solicitudes') {
+        <app-solicitudes
+          [categorias]="categorias()"
+          [solicitudes]="solicitudes()"
+          [procesando]="procesando()"
+          (guardar)="guardarSolicitud($event)"
+          (cancelar)="cancelarSolicitud($event)"
+          (verCotizaciones)="verCotizaciones($event)" />
+      }
+
+      @case ('cotizaciones') {
+        @if (solicitudSeleccionada(); as solicitud) {
+          <app-cotizaciones
+            [solicitud]="solicitud"
+            [cotizaciones]="cotizaciones()"
+            [cargando]="cargandoCotizaciones()"
+            (contratar)="contratar($event)"
+            (cerrar)="cambiarSeccion('solicitudes')" />
+        } @else {
+          <header>
+            <h1>Cotizaciones recibidas</h1>
+            <p>Selecciona una solicitud para consultar sus propuestas.</p>
+          </header>
+
+          @for (solicitud of solicitudes(); track solicitud.id) {
+            <article class="card seleccion">
+              <h3>{{ solicitud.titulo }}</h3>
+              <button type="button" class="btn btn-outline"
+                      (click)="verCotizaciones(solicitud)">
+                Ver cotizaciones
+              </button>
+            </article>
+          } @empty {
+            <section class="card">
+              <p>No tienes solicitudes registradas.</p>
+              <button type="button" class="btn btn-primary"
+                      (click)="cambiarSeccion('solicitudes')">
+                Ir a solicitudes
+              </button>
+            </section>
+          }
+        }
+      }
+
+      @case ('contrataciones') {
+        <app-contrataciones
+          [contrataciones]="contrataciones()"
+          [procesando]="procesando()"
+          (finalizar)="finalizarContratacion($event)"
+          (cancelar)="cancelarContratacion($event)"
+          (calificar)="calificar($event)" />
+      }
+    }
+  </div>
+
+</app-dashboard-layout>
+
+<app-confirm-dialog
+  titulo="Confirmar operación"
+  [mensaje]="mensajeConfirmacion()"
+  (confirmar)="ejecutarConfirmacion()"
+  (cancelar)="cancelarConfirmacion()" />

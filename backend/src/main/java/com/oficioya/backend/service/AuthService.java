@@ -59,7 +59,6 @@ public class AuthService {
                 .toLowerCase(Locale.ROOT);
 
         if (usuarioRepository.existsByCorreo(correo)) {
-
             throw new ConflictoException(
                     "El correo ya está registrado");
         }
@@ -88,9 +87,42 @@ public class AuthService {
 
     public LoginResponse login(LoginRequest request) {
 
+        Usuario usuario = autenticar(request);
+
+        if (usuario.getRol() != Rol.CLIENTE
+                && usuario.getRol() != Rol.PROFESIONAL) {
+
+            throw new BadCredentialsException(
+                    "Credenciales incorrectas");
+        }
+
+        return generarRespuesta(usuario);
+    }
+
+    public LoginResponse loginAdmin(LoginRequest request) {
+
+        Usuario usuario = autenticar(request);
+
+        if (usuario.getRol() != Rol.ADMIN) {
+            throw new BadCredentialsException(
+                    "Credenciales incorrectas");
+        }
+
+        return generarRespuesta(usuario);
+    }
+
+    private Usuario autenticar(LoginRequest request) {
+
         String correo = request.correo()
                 .trim()
                 .toLowerCase(Locale.ROOT);
+
+        if (request.contrasena()
+                .getBytes(StandardCharsets.UTF_8).length > 72) {
+
+            throw new BadCredentialsException(
+                    "Credenciales incorrectas");
+        }
 
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
@@ -98,7 +130,10 @@ public class AuthService {
                         request.contrasena())
         );
 
-        Usuario usuario = usuarioService.obtenerPorCorreo(correo);
+        return usuarioService.obtenerPorCorreo(correo);
+    }
+
+    private LoginResponse generarRespuesta(Usuario usuario) {
 
         String token = jwtService.generarToken(usuario);
 

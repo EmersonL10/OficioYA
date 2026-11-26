@@ -113,7 +113,8 @@ public class SecurityConfig {
                             HttpMethod.POST,
                             "/api/auth/registro",
                             "/api/auth/registro-profesional",
-                            "/api/auth/login")
+                            "/api/auth/login",
+                            "/api/auth/login-admin")
                     .permitAll()
 
                     .requestMatchers(

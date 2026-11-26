@@ -1,0 +1,77 @@
+<app-dashboard-layout
+  titulo="Panel profesional"
+  [nombre]="auth.usuario()?.nombres ?? ''"
+  [correo]="auth.usuario()?.correo ?? ''"
+  [menu]="menu"
+  [seccion]="seccion()"
+  (seleccionar)="cambiarSeccion($event)">
+
+  <div class="contenido">
+    <app-notification
+      [mensaje]="mensaje()"
+      [tipo]="tipoMensaje()"
+      (cerrar)="mensaje.set('')" />
+
+    @if (cargando()) {
+      <p class="cargando" role="status">Actualizando información...</p>
+    }
+
+    @switch (seccion()) {
+      @case ('resumen') {
+        <app-resumen
+          [nombre]="auth.usuario()?.nombres ?? ''"
+          [perfil]="perfil()"
+          [solicitudes]="solicitudes()"
+          [cotizaciones]="cotizaciones()"
+          [contrataciones]="contrataciones()"
+          (navegar)="cambiarSeccion($event)" />
+      }
+
+      @case ('perfil') {
+        <app-perfil
+          [perfil]="perfil()"
+          [categorias]="categorias()"
+          [procesando]="procesando() || cargando()"
+          (guardar)="guardarPerfil($event)"
+          (cambiarDisponibilidad)="cambiarDisponibilidad($event)" />
+      }
+
+      @case ('oportunidades') {
+        <app-oportunidades
+          [perfil]="perfil()"
+          [solicitudes]="solicitudes()"
+          [cotizaciones]="cotizaciones()"
+          [procesando]="procesando() || cargando()"
+          (cotizar)="enviarCotizacion($event)"
+          (navegar)="cambiarSeccion($event)" />
+      }
+
+      @case ('cotizaciones') {
+        <app-cotizaciones
+          [cotizaciones]="cotizaciones()"
+          (navegar)="cambiarSeccion($event)" />
+      }
+
+      @case ('contrataciones') {
+        <app-contrataciones
+          [contrataciones]="contrataciones()"
+          [procesando]="procesando() || cargando()"
+          (iniciar)="iniciarContratacion($event)"
+          (navegar)="cambiarSeccion($event)" />
+      }
+
+      @case ('reputacion') {
+        <app-reputacion
+          [perfil]="perfil()"
+          [calificaciones]="calificaciones()"
+          (navegar)="cambiarSeccion($event)" />
+      }
+    }
+  </div>
+</app-dashboard-layout>
+
+<app-confirm-dialog
+  titulo="Confirmar operación"
+  [mensaje]="mensajeConfirmacion()"
+  (confirmar)="ejecutarConfirmacion()"
+  (cancelar)="cancelarConfirmacion()" />

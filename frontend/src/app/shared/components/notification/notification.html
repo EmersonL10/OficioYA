@@ -1,0 +1,7 @@
+@if (mensaje()) {
+  <div class="notification" [attr.data-tipo]="tipo()"
+       [attr.role]="tipo() === 'error' ? 'alert' : 'status'">
+    <span>{{ mensaje() }}</span>
+    <button type="button" (click)="cerrar.emit()">Cerrar</button>
+  </div>
+}

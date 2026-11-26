@@ -1,0 +1,21 @@
+:host {
+  display: block;
+  padding-block: var(--space-5);
+}
+
+.contenido {
+  display: grid;
+  gap: var(--space-4);
+  min-width: 0;
+}
+
+.cargando {
+  color: var(--primary);
+  font-size: var(--font-small);
+}
+
+@media (max-width: 600px) {
+  :host {
+    padding-block: var(--space-3);
+  }
+}

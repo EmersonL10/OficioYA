@@ -1,0 +1,62 @@
+<header>
+  <h1>Panel profesional</h1>
+  <p>Bienvenido, {{ nombre() }}. Gestiona tus oportunidades y servicios.</p>
+</header>
+
+@if (perfil(); as profesional) {
+  <section class="card perfil">
+    <div>
+      <h2>Mi perfil profesional</h2>
+      <p>{{ profesional.categoriaNombre }} · {{ profesional.experienciaAnios }} años de experiencia</p>
+      <app-status [estado]="profesional.disponible ? 'DISPONIBLE' : 'NO DISPONIBLE'" />
+    </div>
+    <button type="button" class="btn btn-outline" (click)="navegar.emit('perfil')">
+      Gestionar perfil
+    </button>
+  </section>
+} @else {
+  <section class="card perfil">
+    <div>
+      <h2>Completa tu perfil profesional</h2>
+      <p>Registra tu especialidad para acceder a oportunidades laborales.</p>
+    </div>
+    <button type="button" class="btn btn-primary" (click)="navegar.emit('perfil')">
+      Crear perfil
+    </button>
+  </section>
+}
+
+<div class="indicadores">
+  @for (item of indicadores(); track item.nombre) {
+    <article class="card indicador">
+      <span>{{ item.nombre }}</span>
+      <strong>{{ item.valor }}</strong>
+    </article>
+  }
+</div>
+
+<section class="card">
+  <div class="encabezado">
+    <h2>Servicios recientes</h2>
+    <button type="button" class="btn btn-outline" (click)="navegar.emit('contrataciones')">
+      Ver todos
+    </button>
+  </div>
+
+  @for (contratacion of recientes(); track contratacion.id) {
+    <article class="servicio">
+      <div>
+        <h3>{{ contratacion.solicitudTitulo }}</h3>
+        <p>{{ contratacion.clienteNombre }}</p>
+      </div>
+      <app-status [estado]="contratacion.estado" />
+    </article>
+  } @empty {
+    <div class="vacio">
+      <p>Todavía no tienes servicios contratados.</p>
+      <button type="button" class="btn btn-primary" (click)="navegar.emit(perfil() ? 'oportunidades' : 'perfil')">
+        {{ perfil() ? 'Explorar oportunidades' : 'Completar perfil' }}
+      </button>
+    </div>
+  }
+</section>
