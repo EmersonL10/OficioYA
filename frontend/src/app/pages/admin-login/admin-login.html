@@ -1,0 +1,53 @@
+<section class="acceso-administrativo">
+  <div class="card acceso-card">
+    <header>
+      <div class="marca">Oficio<span>YA</span></div>
+      <h1>Acceso administrativo</h1>
+      <p>Área restringida a personal autorizado.</p>
+    </header>
+
+    <app-notification
+      [mensaje]="error()"
+      tipo="error"
+      (cerrar)="error.set('')" />
+
+    <form [formGroup]="formulario" (ngSubmit)="iniciarSesion()" novalidate>
+      <div class="form-group">
+        <label for="correo">Correo electrónico</label>
+        <input id="correo" type="email" formControlName="correo"
+               autocomplete="username">
+
+        @if (formulario.controls.correo.touched && formulario.controls.correo.invalid) {
+          <span class="error">Ingresa un correo electrónico válido.</span>
+        }
+      </div>
+
+      <div class="form-group">
+        <label for="contrasena">Contraseña</label>
+
+        <div class="campo-contrasena">
+          <input id="contrasena"
+                 [type]="mostrarContrasena() ? 'text' : 'password'"
+                 formControlName="contrasena"
+                 autocomplete="current-password">
+
+          <button type="button" class="btn btn-outline"
+                  (click)="alternarContrasena()">
+            {{ mostrarContrasena() ? 'Ocultar' : 'Mostrar' }}
+          </button>
+        </div>
+
+        @if (formulario.controls.contrasena.touched && formulario.controls.contrasena.invalid) {
+          <span class="error">Ingresa una contraseña válida.</span>
+        }
+      </div>
+
+      <button type="submit" class="btn btn-primary ingresar"
+              [attr.aria-busy]="cargando()">
+        {{ cargando() ? 'Verificando...' : 'Acceder al panel' }}
+      </button>
+    </form>
+
+    <footer>Sistema de administración de OficioYA</footer>
+  </div>
+</section>

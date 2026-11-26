@@ -1,0 +1,102 @@
+:host {
+  display: grid;
+  gap: var(--space-4);
+}
+
+p, small {
+  color: var(--muted);
+}
+
+.encabezado,
+.acciones,
+.acciones-tabla {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+}
+
+.encabezado {
+  justify-content: space-between;
+}
+
+.formulario {
+  display: grid;
+  gap: var(--space-4);
+}
+
+.filtros {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: var(--space-4);
+}
+
+.acciones {
+  justify-content: flex-end;
+  border-top: 1px solid var(--border);
+  padding-top: var(--space-3);
+}
+
+.tabla-contenedor {
+  overflow-x: auto;
+  margin-top: var(--space-4);
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+
+  th, td {
+    padding: var(--space-3);
+    border-bottom: 1px solid var(--border);
+    vertical-align: middle;
+  }
+
+  th {
+    background: var(--background);
+    font-weight: 600;
+    white-space: nowrap;
+  }
+
+  tbody tr:hover {
+    background: var(--background);
+  }
+}
+
+.descripcion {
+  min-width: 180px;
+  max-width: 350px;
+  overflow-wrap: anywhere;
+  color: var(--muted);
+}
+
+.acciones-tabla {
+  flex-wrap: nowrap;
+}
+
+.desactivar {
+  color: var(--danger);
+  border-color: var(--danger);
+}
+
+.vacio {
+  text-align: center;
+  color: var(--muted);
+  padding: var(--space-5);
+}
+
+.ng-invalid.ng-touched {
+  border-color: var(--danger);
+}
+
+@media (max-width: 600px) {
+  .filtros {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+
+  .acciones button {
+    flex: 1;
+  }
+}

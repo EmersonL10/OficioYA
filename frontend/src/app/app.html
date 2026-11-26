@@ -1,7 +1,11 @@
-<app-navbar />
+@if (!esAdministrativo()) {
+  <app-navbar />
+}
 
 <main>
   <router-outlet />
 </main>
 
-<app-footer />
+@if (!esAdministrativo()) {
+  <app-footer />
+}

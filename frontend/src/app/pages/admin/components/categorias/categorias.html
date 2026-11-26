@@ -1,0 +1,128 @@
+<header class="encabezado">
+  <div>
+    <h1>Gestión de categorías</h1>
+    <p>Administra las especialidades disponibles en OficioYA.</p>
+  </div>
+
+  <button type="button" class="btn btn-primary" (click)="nuevaCategoria()">
+    Nueva categoría
+  </button>
+</header>
+
+@if (mostrarFormulario()) {
+  <section class="card formulario">
+    <h2>{{ categoriaEditada() !== null ? 'Editar categoría' : 'Registrar categoría' }}</h2>
+
+    <app-notification [mensaje]="error()" tipo="error" (cerrar)="error.set('')" />
+
+    <form [formGroup]="formulario" (ngSubmit)="enviar()" novalidate>
+      <div class="form-group">
+        <label for="nombre">Nombre de la categoría</label>
+        <input id="nombre" type="text" formControlName="nombre"
+               placeholder="Ej. Electricidad">
+
+        @if (formulario.controls.nombre.touched && formulario.controls.nombre.invalid) {
+          <span class="error">Ingresa un nombre de 3 a 100 caracteres.</span>
+        }
+      </div>
+
+      <div class="form-group">
+        <label for="descripcion">Descripción</label>
+        <textarea id="descripcion" formControlName="descripcion" rows="4"
+                  placeholder="Describe los servicios de esta categoría."></textarea>
+
+        <small>{{ formulario.controls.descripcion.value.length }}/500 caracteres</small>
+
+        @if (formulario.controls.descripcion.touched && formulario.controls.descripcion.invalid) {
+          <span class="error">La descripción no debe superar los 500 caracteres.</span>
+        }
+      </div>
+
+      <div class="acciones">
+        <button type="button" class="btn btn-outline" (click)="cerrarFormulario()">
+          Cancelar
+        </button>
+
+        <button type="submit" class="btn btn-primary" [attr.aria-busy]="procesando()">
+          {{ procesando() ? 'Guardando...' : 'Guardar categoría' }}
+        </button>
+      </div>
+    </form>
+  </section>
+}
+
+<section class="card">
+  <div class="filtros">
+    <div class="form-group">
+      <label for="buscar">Buscar categoría</label>
+      <input id="buscar" type="search" placeholder="Nombre o descripción"
+             [value]="busqueda()"
+             (input)="busqueda.set($any($event.target).value)">
+    </div>
+
+    <div class="form-group">
+      <label for="estado">Estado</label>
+      <select id="estado" [value]="estado()"
+              (change)="estado.set($any($event.target).value)">
+        <option value="TODAS">Todas las categorías</option>
+        <option value="ACTIVAS">Activas</option>
+        <option value="INACTIVAS">Inactivas</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="encabezado">
+    <small>{{ categoriasFiltradas().length }} de {{ categorias().length }} categorías</small>
+    <button type="button" class="btn btn-outline" (click)="limpiarFiltros()">
+      Limpiar filtros
+    </button>
+  </div>
+</section>
+
+<section class="card">
+  <h2>Categorías registradas</h2>
+
+  <div class="tabla-contenedor">
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Nombre</th>
+          <th>Descripción</th>
+          <th>Estado</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        @for (categoria of categoriasFiltradas(); track categoria.id) {
+          <tr>
+            <td>{{ categoria.id }}</td>
+            <td><strong>{{ categoria.nombre }}</strong></td>
+            <td class="descripcion">{{ categoria.descripcion || 'Sin descripción' }}</td>
+            <td>
+              <app-status [estado]="categoria.activo ? 'ACTIVO' : 'INACTIVO'" />
+            </td>
+            <td>
+              <div class="acciones-tabla">
+                <button type="button" class="btn btn-outline" (click)="editar(categoria)">
+                  Editar
+                </button>
+
+                <button type="button" class="btn btn-outline"
+                        [class.desactivar]="categoria.activo"
+                        (click)="cambiarEstado.emit(categoria)">
+                  {{ categoria.activo ? 'Desactivar' : 'Activar' }}
+                </button>
+              </div>
+            </td>
+          </tr>
+        } @empty {
+          <tr>
+            <td colspan="5" class="vacio">No se encontraron categorías.</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+</section>

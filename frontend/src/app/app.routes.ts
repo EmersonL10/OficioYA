@@ -6,9 +6,11 @@ import { Registro } from './pages/registro/registro';
 import { Cliente } from './pages/cliente/cliente';
 import { Profesional } from './pages/profesional/profesional';
 import { Admin } from './pages/admin/admin';
+import { AdminLogin } from './pages/admin-login/admin-login';
 
 import { authGuard } from './core/guards/auth.guard';
 import { rolGuard } from './core/guards/rol.guard';
+import { adminGuard } from './core/guards/admin-guard';
 
 export const routes: Routes = [
 
@@ -37,10 +39,13 @@ export const routes: Routes = [
     data: { rol: 'PROFESIONAL' }
   },
   {
+    path: 'admin/login',
+    component: AdminLogin
+  },
+  {
     path: 'admin',
     component: Admin,
-    canActivate: [authGuard, rolGuard],
-    data: { rol: 'ADMIN' }
+    canActivate: [adminGuard]
   },
   {
     path: '**',
