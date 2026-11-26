@@ -1,3 +1,4 @@
+﻿import { provideRouter } from '@angular/router';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Registro } from './registro';
 
@@ -6,7 +7,7 @@ describe('Registro', () => {
   let fixture: ComponentFixture<Registro>;
 
   beforeEach(async () => {
-    await TestBed.configureTestingModule({
+    await TestBed.configureTestingModule({ providers: [provideRouter([])],
       imports: [Registro],
     }).compileComponents();
 
@@ -19,3 +20,4 @@ describe('Registro', () => {
     expect(component).toBeTruthy();
   });
 });
+

@@ -1,4 +1,4 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+﻿import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Resumen } from './resumen';
 
 describe('Resumen', () => {
@@ -12,6 +12,11 @@ describe('Resumen', () => {
 
     fixture = TestBed.createComponent(Resumen);
     component = fixture.componentInstance;
+        fixture.componentRef.setInput('perfil', null);
+    fixture.componentRef.setInput('nombre', 'Miguel');
+    fixture.componentRef.setInput('solicitudes', []);
+    fixture.componentRef.setInput('cotizaciones', []);
+    fixture.componentRef.setInput('contrataciones', []);
     await fixture.whenStable();
   });
 
@@ -19,3 +24,4 @@ describe('Resumen', () => {
     expect(component).toBeTruthy();
   });
 });
+

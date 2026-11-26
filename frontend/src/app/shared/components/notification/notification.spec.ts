@@ -1,4 +1,4 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+﻿import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Notification } from './notification';
 
 describe('Notification', () => {
@@ -12,6 +12,7 @@ describe('Notification', () => {
 
     fixture = TestBed.createComponent(Notification);
     component = fixture.componentInstance;
+        fixture.componentRef.setInput('mensaje', 'Operacion correcta');
     await fixture.whenStable();
   });
 
@@ -19,3 +20,4 @@ describe('Notification', () => {
     expect(component).toBeTruthy();
   });
 });
+

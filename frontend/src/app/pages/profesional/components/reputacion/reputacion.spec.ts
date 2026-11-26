@@ -1,4 +1,4 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+﻿import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Reputacion } from './reputacion';
 
 describe('Reputacion', () => {
@@ -12,6 +12,8 @@ describe('Reputacion', () => {
 
     fixture = TestBed.createComponent(Reputacion);
     component = fixture.componentInstance;
+        fixture.componentRef.setInput('perfil', null);
+    fixture.componentRef.setInput('calificaciones', []);
     await fixture.whenStable();
   });
 
@@ -19,3 +21,4 @@ describe('Reputacion', () => {
     expect(component).toBeTruthy();
   });
 });
+

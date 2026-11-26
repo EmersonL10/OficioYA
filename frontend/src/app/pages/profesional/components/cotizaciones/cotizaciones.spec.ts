@@ -1,4 +1,4 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+﻿import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Cotizaciones } from './cotizaciones';
 
 describe('Cotizaciones', () => {
@@ -12,6 +12,7 @@ describe('Cotizaciones', () => {
 
     fixture = TestBed.createComponent(Cotizaciones);
     component = fixture.componentInstance;
+        fixture.componentRef.setInput('cotizaciones', []);
     await fixture.whenStable();
   });
 
@@ -19,3 +20,4 @@ describe('Cotizaciones', () => {
     expect(component).toBeTruthy();
   });
 });
+

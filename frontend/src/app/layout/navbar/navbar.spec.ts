@@ -1,3 +1,4 @@
+﻿import { provideRouter } from '@angular/router';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Navbar } from './navbar';
 
@@ -6,7 +7,7 @@ describe('Navbar', () => {
   let fixture: ComponentFixture<Navbar>;
 
   beforeEach(async () => {
-    await TestBed.configureTestingModule({
+    await TestBed.configureTestingModule({ providers: [provideRouter([])],
       imports: [Navbar],
     }).compileComponents();
 
@@ -19,3 +20,4 @@ describe('Navbar', () => {
     expect(component).toBeTruthy();
   });
 });
+

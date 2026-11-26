@@ -1,4 +1,4 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+﻿import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Cotizaciones } from './cotizaciones';
 
 describe('Cotizaciones', () => {
@@ -12,6 +12,20 @@ describe('Cotizaciones', () => {
 
     fixture = TestBed.createComponent(Cotizaciones);
     component = fixture.componentInstance;
+        fixture.componentRef.setInput('cotizaciones', []);
+    fixture.componentRef.setInput('solicitud', {
+  id: 1,
+  clienteId: 2,
+  clienteNombre: 'Carlos Ramirez',
+  categoriaId: 1,
+  categoriaNombre: 'Electricidad',
+  titulo: 'Instalacion electrica',
+  descripcion: 'Instalacion de luminarias',
+  direccion: 'Pucallpa',
+  presupuesto: 250,
+  estado: 'ABIERTA',
+  fechaCreacion: '2026-11-26T14:00:00'
+});
     await fixture.whenStable();
   });
 
@@ -19,3 +33,4 @@ describe('Cotizaciones', () => {
     expect(component).toBeTruthy();
   });
 });
+

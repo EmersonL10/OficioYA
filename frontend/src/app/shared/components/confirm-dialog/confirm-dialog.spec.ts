@@ -1,4 +1,4 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+﻿import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ConfirmDialog } from './confirm-dialog';
 
 describe('ConfirmDialog', () => {
@@ -12,6 +12,7 @@ describe('ConfirmDialog', () => {
 
     fixture = TestBed.createComponent(ConfirmDialog);
     component = fixture.componentInstance;
+        fixture.componentRef.setInput('mensaje', 'Confirmar operacion');
     await fixture.whenStable();
   });
 
@@ -19,3 +20,4 @@ describe('ConfirmDialog', () => {
     expect(component).toBeTruthy();
   });
 });
+

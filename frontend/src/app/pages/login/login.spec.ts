@@ -1,3 +1,4 @@
+﻿import { provideRouter } from '@angular/router';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Login } from './login';
 
@@ -6,7 +7,7 @@ describe('Login', () => {
   let fixture: ComponentFixture<Login>;
 
   beforeEach(async () => {
-    await TestBed.configureTestingModule({
+    await TestBed.configureTestingModule({ providers: [provideRouter([])],
       imports: [Login],
     }).compileComponents();
 
@@ -19,3 +20,4 @@ describe('Login', () => {
     expect(component).toBeTruthy();
   });
 });
+

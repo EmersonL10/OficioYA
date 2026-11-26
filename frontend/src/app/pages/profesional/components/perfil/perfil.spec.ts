@@ -1,4 +1,4 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+﻿import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Perfil } from './perfil';
 
 describe('Perfil', () => {
@@ -12,6 +12,8 @@ describe('Perfil', () => {
 
     fixture = TestBed.createComponent(Perfil);
     component = fixture.componentInstance;
+        fixture.componentRef.setInput('perfil', null);
+    fixture.componentRef.setInput('categorias', []);
     await fixture.whenStable();
   });
 
@@ -19,3 +21,4 @@ describe('Perfil', () => {
     expect(component).toBeTruthy();
   });
 });
+

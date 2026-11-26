@@ -1,4 +1,4 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+﻿import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Status } from './status';
 
 describe('Status', () => {
@@ -12,6 +12,7 @@ describe('Status', () => {
 
     fixture = TestBed.createComponent(Status);
     component = fixture.componentInstance;
+        fixture.componentRef.setInput('estado', 'ACTIVO');
     await fixture.whenStable();
   });
 
@@ -19,3 +20,4 @@ describe('Status', () => {
     expect(component).toBeTruthy();
   });
 });
+
