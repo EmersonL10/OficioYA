@@ -1,0 +1,77 @@
+<header class="navbar">
+  <div class="container navigation">
+
+    <a routerLink="/" class="brand" aria-label="OficioYA - Inicio">
+      Oficio<span class="accent">YA</span>
+    </a>
+
+    <nav aria-label="Navegación principal">
+
+      <a routerLink="/"
+         routerLinkActive="active"
+         ariaCurrentWhenActive="page"
+         [routerLinkActiveOptions]="{ exact: true }">
+        Inicio
+      </a>
+
+      @if (auth.usuario(); as usuario) {
+
+        @switch (usuario.rol) {
+
+          @case ('CLIENTE') {
+            <a routerLink="/cliente"
+               routerLinkActive="active"
+               ariaCurrentWhenActive="page">
+              Mi panel
+            </a>
+          }
+
+          @case ('PROFESIONAL') {
+            <a routerLink="/profesional"
+               routerLinkActive="active"
+               ariaCurrentWhenActive="page">
+              Mi panel
+            </a>
+          }
+
+          @case ('ADMIN') {
+            <a routerLink="/admin"
+               routerLinkActive="active"
+               ariaCurrentWhenActive="page">
+              Administración
+            </a>
+          }
+
+        }
+
+        <span class="user-name">
+          {{ usuario.nombres }}
+        </span>
+
+        <button type="button"
+                class="btn btn-outline"
+                (click)="cerrarSesion()">
+          Cerrar sesión
+        </button>
+
+      } @else {
+
+        <a routerLink="/login"
+           routerLinkActive="active"
+           ariaCurrentWhenActive="page">
+          Iniciar sesión
+        </a>
+
+        <a routerLink="/registro"
+           routerLinkActive="active"
+           ariaCurrentWhenActive="page"
+           class="btn btn-primary">
+          Registrarme
+        </a>
+
+      }
+
+    </nav>
+
+  </div>
+</header>

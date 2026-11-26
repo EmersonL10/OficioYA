@@ -1,0 +1,275 @@
+// Sección de búsqueda
+.search-section {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  padding-block: var(--space-6);
+
+  h1 {
+    margin-bottom: var(--space-2);
+  }
+}
+
+.search-description {
+  color: var(--muted);
+  margin-bottom: var(--space-5);
+}
+
+.search-form {
+  display: grid;
+  grid-template-columns: 2fr 1fr auto;
+  align-items: end;
+  gap: var(--space-4);
+}
+
+.search-field {
+  display: grid;
+  gap: var(--space-2);
+  min-width: 0;
+
+  label {
+    font-weight: 600;
+  }
+
+  input,
+  select {
+    width: 100%;
+    min-height: var(--input-height);
+    padding: var(--space-2) var(--space-3);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    background: var(--surface);
+    color: var(--text);
+
+    &:focus {
+      border-color: var(--primary);
+    }
+  }
+}
+
+.search-form .btn {
+  min-height: var(--input-height);
+}
+
+// Contenido principal
+.main-content {
+  padding-block: var(--space-5);
+}
+
+.marketplace-layout {
+  display: grid;
+  grid-template-columns: 240px minmax(0, 1fr);
+  align-items: start;
+  gap: var(--space-5);
+}
+
+// Panel de categorías
+.category-panel {
+  h2 {
+    font-size: var(--font-h3);
+    margin-bottom: var(--space-4);
+  }
+}
+
+.category-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.category-item {
+  width: 100%;
+  min-height: var(--button-height);
+  padding: var(--space-2) var(--space-3);
+  border: 1px solid transparent;
+  border-radius: var(--radius);
+  background: transparent;
+  color: var(--text);
+  text-align: left;
+
+  &:hover {
+    background: var(--background);
+    color: var(--primary);
+  }
+
+  &.selected {
+    background: #eaf2f8;
+    color: var(--primary);
+    border-color: #c8deed;
+    font-weight: 600;
+  }
+}
+
+// Directorio de profesionales
+.section-heading {
+  margin-bottom: var(--space-4);
+
+  h2 {
+    margin-bottom: var(--space-1);
+  }
+
+  p {
+    margin: 0;
+    font-size: var(--font-small);
+    color: var(--muted);
+  }
+}
+
+.professionals-list {
+  display: grid;
+  gap: var(--space-3);
+}
+
+.professional-card {
+  overflow-wrap: anywhere;
+}
+
+.professional-heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+
+  h3 {
+    margin-bottom: var(--space-1);
+  }
+}
+
+.professional-category {
+  color: var(--primary);
+  font-size: var(--font-small);
+  margin-bottom: var(--space-3);
+}
+
+.availability {
+  color: var(--success);
+  font-size: var(--font-small);
+}
+
+.professional-description {
+  color: var(--text);
+  margin-bottom: var(--space-4);
+}
+
+.professional-details {
+  border-top: 1px solid var(--border);
+  padding-top: var(--space-3);
+  color: var(--muted);
+  font-size: var(--font-small);
+}
+
+// Estados de carga, error y búsqueda vacía
+.status-message,
+.empty-state {
+  padding: var(--space-6);
+  text-align: center;
+  color: var(--muted);
+}
+
+.status-message {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+
+.empty-state h3 {
+  color: var(--text);
+}
+
+// Funcionamiento de la plataforma
+.how-it-works {
+  margin-top: var(--space-6);
+  padding-block: var(--space-5);
+  border-top: 1px solid var(--border);
+}
+
+.steps-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--space-5);
+}
+
+.step {
+  h3 {
+    margin-bottom: var(--space-2);
+  }
+
+  p {
+    margin: 0;
+    color: var(--muted);
+    font-size: var(--font-small);
+  }
+}
+
+.step-number {
+  display: block;
+  color: var(--primary);
+  font-size: var(--font-h2);
+  font-weight: 600;
+  margin-bottom: var(--space-2);
+}
+
+// Acceso a la plataforma
+.action-section {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: var(--space-4);
+  margin-top: var(--space-4);
+
+  h2 {
+    margin-bottom: var(--space-2);
+  }
+
+  p {
+    margin: 0;
+    color: var(--muted);
+  }
+}
+
+// Diseño responsive
+@media (max-width: 900px) {
+  .search-form {
+    grid-template-columns: 1fr 1fr;
+
+    .btn {
+      grid-column: 1 / -1;
+      justify-self: start;
+    }
+  }
+
+  .marketplace-layout {
+    grid-template-columns: 200px minmax(0, 1fr);
+    gap: var(--space-4);
+  }
+}
+
+@media (max-width: 600px) {
+  .search-form,
+  .marketplace-layout,
+  .steps-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .category-list {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .search-field {
+    input,
+    select {
+      font-size: 16px;
+    }
+  }
+
+  .search-form .btn,
+  .action-section .btn {
+    width: 100%;
+  }
+
+  .search-section {
+    padding-block: var(--space-5);
+  }
+}

@@ -1,0 +1,275 @@
+<section class="registro-page">
+  <div class="container registro-container">
+
+    <div class="registro-card card">
+
+      @if (exito()) {
+
+        <div class="success-state" role="status">
+
+          <h1>Cuenta creada correctamente</h1>
+
+          <p class="success">
+            Tu registro en OficioYA se ha completado exitosamente.
+          </p>
+
+          <p>
+            Ya puedes iniciar sesión con tus credenciales.
+          </p>
+
+          <a routerLink="/login" class="btn btn-primary">
+            Iniciar sesión
+          </a>
+
+        </div>
+
+      } @else {
+
+        <header class="registro-heading">
+
+          <h1>Crear una cuenta</h1>
+
+          <p>
+            Regístrate para solicitar u ofrecer servicios profesionales.
+          </p>
+
+        </header>
+
+        @if (error()) {
+          <div class="error-message" role="alert">
+            {{ error() }}
+          </div>
+        }
+
+        <form
+          [formGroup]="formulario"
+          (ngSubmit)="registrar()"
+          novalidate
+        >
+
+          <fieldset class="account-section">
+
+            <legend>¿Cómo deseas utilizar OficioYA?</legend>
+
+            <div class="account-options">
+
+              <label
+                class="account-option"
+                [class.selected]="
+                  formulario.controls.tipoCuenta.value === 'CLIENTE'
+                "
+              >
+
+                <input
+                  type="radio"
+                  formControlName="tipoCuenta"
+                  value="CLIENTE"
+                />
+
+                <span>
+                  <strong>Cliente</strong>
+                  <small>Necesito contratar servicios.</small>
+                </span>
+
+              </label>
+
+              <label
+                class="account-option"
+                [class.selected]="
+                  formulario.controls.tipoCuenta.value === 'PROFESIONAL'
+                "
+              >
+
+                <input
+                  type="radio"
+                  formControlName="tipoCuenta"
+                  value="PROFESIONAL"
+                />
+
+                <span>
+                  <strong>Profesional</strong>
+                  <small>Deseo ofrecer mis servicios.</small>
+                </span>
+
+              </label>
+
+            </div>
+
+          </fieldset>
+
+          <div class="form-grid">
+
+            <div class="form-group">
+
+              <label for="nombres">Nombres</label>
+
+              <input
+                id="nombres"
+                type="text"
+                formControlName="nombres"
+                placeholder="Ingresa tus nombres"
+                autocomplete="given-name"
+                required
+                [attr.aria-invalid]="!!mensajeCampo('nombres')"
+                [attr.aria-describedby]="
+                  mensajeCampo('nombres') ? 'nombres-error' : null
+                "
+              />
+
+              @if (mensajeCampo('nombres')) {
+                <span class="error" id="nombres-error">
+                  {{ mensajeCampo('nombres') }}
+                </span>
+              }
+
+            </div>
+
+            <div class="form-group">
+
+              <label for="apellidos">Apellidos</label>
+
+              <input
+                id="apellidos"
+                type="text"
+                formControlName="apellidos"
+                placeholder="Ingresa tus apellidos"
+                autocomplete="family-name"
+                required
+                [attr.aria-invalid]="!!mensajeCampo('apellidos')"
+                [attr.aria-describedby]="
+                  mensajeCampo('apellidos') ? 'apellidos-error' : null
+                "
+              />
+
+              @if (mensajeCampo('apellidos')) {
+                <span class="error" id="apellidos-error">
+                  {{ mensajeCampo('apellidos') }}
+                </span>
+              }
+
+            </div>
+
+          </div>
+
+          <div class="form-group">
+
+            <label for="correo">Correo electrónico</label>
+
+            <input
+              id="correo"
+              type="email"
+              formControlName="correo"
+              placeholder="correo@ejemplo.com"
+              autocomplete="email"
+              required
+              [attr.aria-invalid]="!!mensajeCampo('correo')"
+              [attr.aria-describedby]="
+                mensajeCampo('correo') ? 'correo-error' : null
+              "
+            />
+
+            @if (mensajeCampo('correo')) {
+              <span class="error" id="correo-error">
+                {{ mensajeCampo('correo') }}
+              </span>
+            }
+
+          </div>
+
+          <div class="form-group">
+
+            <label for="telefono">Número de celular</label>
+
+            <input
+              id="telefono"
+              type="tel"
+              inputmode="numeric"
+              formControlName="telefono"
+              placeholder="987654321"
+              autocomplete="tel-national"
+              required
+              [attr.aria-invalid]="!!mensajeCampo('telefono')"
+              [attr.aria-describedby]="
+                mensajeCampo('telefono') ? 'telefono-error' : null
+              "
+            />
+
+            @if (mensajeCampo('telefono')) {
+              <span class="error" id="telefono-error">
+                {{ mensajeCampo('telefono') }}
+              </span>
+            }
+
+          </div>
+
+          <div class="form-group">
+
+            <label for="contrasena">Contraseña</label>
+
+            <div class="password-field">
+
+              <input
+                id="contrasena"
+                [type]="mostrarContrasena() ? 'text' : 'password'"
+                formControlName="contrasena"
+                placeholder="Crea una contraseña"
+                autocomplete="new-password"
+                required
+                [attr.aria-invalid]="!!mensajeCampo('contrasena')"
+                [attr.aria-describedby]="
+                  mensajeCampo('contrasena')
+                    ? 'contrasena-ayuda contrasena-error'
+                    : 'contrasena-ayuda'
+                "
+              />
+
+              <button
+                type="button"
+                class="password-toggle"
+                (click)="alternarContrasena()"
+                [attr.aria-pressed]="mostrarContrasena()"
+                aria-controls="contrasena"
+              >
+                {{ mostrarContrasena() ? 'Ocultar' : 'Mostrar' }}
+              </button>
+
+            </div>
+
+            <small class="field-help" id="contrasena-ayuda">
+              Utiliza al menos 8 caracteres.
+            </small>
+
+            @if (mensajeCampo('contrasena')) {
+              <span class="error" id="contrasena-error">
+                {{ mensajeCampo('contrasena') }}
+              </span>
+            }
+
+          </div>
+
+          <button
+            type="submit"
+            class="btn btn-primary register-button"
+            [attr.aria-busy]="cargando()"
+          >
+            {{ cargando() ? 'Creando cuenta...' : 'Crear cuenta' }}
+          </button>
+
+        </form>
+
+        <div class="login-section">
+
+          <p>¿Ya tienes una cuenta?</p>
+
+          <a routerLink="/login">
+            Iniciar sesión
+          </a>
+
+        </div>
+
+      }
+
+    </div>
+
+  </div>
+</section>

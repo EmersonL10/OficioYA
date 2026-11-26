@@ -1,0 +1,324 @@
+<section class="search-section">
+  <div class="container">
+
+    <h1>Encuentra al profesional que necesitas</h1>
+
+    <p class="search-description">
+      Encuentra servicios técnicos y profesionales en Pucallpa.
+      Compara alternativas y contrata según tus necesidades.
+    </p>
+
+    <div class="search-form" role="search">
+
+      <div class="search-field">
+        <label for="busqueda">¿Qué servicio necesitas?</label>
+
+        <input
+          id="busqueda"
+          type="search"
+          placeholder="Electricista, carpintero, técnico..."
+          [ngModel]="busqueda()"
+          (ngModelChange)="busqueda.set($event)"
+        />
+      </div>
+
+      <div class="search-field">
+        <label for="categoria">Categoría</label>
+
+        <select
+          id="categoria"
+          [ngModel]="categoriaSeleccionada()"
+          (ngModelChange)="seleccionarCategoria($event)"
+        >
+          <option [ngValue]="null">
+            Todas las categorías
+          </option>
+
+          @for (categoria of categorias(); track categoria.id) {
+            <option [ngValue]="categoria.id">
+              {{ categoria.nombre }}
+            </option>
+          }
+        </select>
+      </div>
+
+      <button
+        type="button"
+        class="btn btn-outline"
+        (click)="limpiarFiltros()"
+      >
+        Limpiar filtros
+      </button>
+
+    </div>
+
+  </div>
+</section>
+
+<div class="container main-content">
+
+  @if (cargando()) {
+
+    <div class="status-message" role="status">
+      Cargando servicios y profesionales...
+    </div>
+
+  } @else if (error()) {
+
+    <div class="status-message" role="alert">
+
+      <p class="error">{{ error() }}</p>
+
+      <button
+        type="button"
+        class="btn btn-primary"
+        (click)="cargarDatos()"
+      >
+        Reintentar
+      </button>
+
+    </div>
+
+  } @else {
+
+    <div class="marketplace-layout">
+
+      <!-- Categorías disponibles -->
+      <aside class="category-panel card">
+
+        <h2>Categorías</h2>
+
+        <div class="category-list">
+
+          <button
+            type="button"
+            class="category-item"
+            [class.selected]="categoriaSeleccionada() === null"
+            [attr.aria-pressed]="categoriaSeleccionada() === null"
+            (click)="seleccionarCategoria(null)"
+          >
+            Todos los servicios
+          </button>
+
+          @for (categoria of categorias(); track categoria.id) {
+
+            <button
+              type="button"
+              class="category-item"
+              [class.selected]="categoriaSeleccionada() === categoria.id"
+              [attr.aria-pressed]="categoriaSeleccionada() === categoria.id"
+              (click)="seleccionarCategoria(categoria.id)"
+            >
+              {{ categoria.nombre }}
+            </button>
+
+          }
+
+        </div>
+
+      </aside>
+
+      <!-- Directorio de profesionales -->
+      <section class="professionals-section">
+
+        <div class="section-heading">
+
+          <h2>Profesionales disponibles</h2>
+
+          <p aria-live="polite">
+            {{ profesionalesFiltrados().length }}
+            profesionales encontrados
+          </p>
+
+        </div>
+
+        <div class="professionals-list">
+
+          @for (
+            profesional of profesionalesFiltrados();
+            track profesional.id
+          ) {
+
+            <article class="professional-card card">
+
+              <div class="professional-heading">
+
+                <div>
+                  <h3>
+                    {{ profesional.nombres }}
+                    {{ profesional.apellidos }}
+                  </h3>
+
+                  <p class="professional-category">
+                    {{ profesional.categoriaNombre }}
+                  </p>
+                </div>
+
+                <span class="availability">
+                  Disponible
+                </span>
+
+              </div>
+
+              <p class="professional-description">
+                {{ profesional.descripcion }}
+              </p>
+
+              <div class="professional-details">
+                <span>
+                  Experiencia:
+                  {{ profesional.experienciaAnios }} años
+                </span>
+              </div>
+
+            </article>
+
+          } @empty {
+
+            <div class="empty-state card">
+
+              <h3>No se encontraron profesionales</h3>
+
+              <p>
+                Prueba con otra búsqueda o selecciona
+                una categoría diferente.
+              </p>
+
+              <button
+                type="button"
+                class="btn btn-outline"
+                (click)="limpiarFiltros()"
+              >
+                Ver todos los profesionales
+              </button>
+
+            </div>
+
+          }
+
+        </div>
+
+      </section>
+
+    </div>
+
+  }
+
+  <!-- Funcionamiento de la plataforma -->
+  <section class="how-it-works">
+
+    <h2>¿Cómo funciona OficioYA?</h2>
+
+    <div class="steps-grid">
+
+      <article class="step">
+
+        <span class="step-number">01</span>
+
+        <h3>Publica tu solicitud</h3>
+
+        <p>
+          Describe el servicio que necesitas y establece
+          tu presupuesto.
+        </p>
+
+      </article>
+
+      <article class="step">
+
+        <span class="step-number">02</span>
+
+        <h3>Recibe cotizaciones</h3>
+
+        <p>
+          Los profesionales interesados podrán enviarte
+          sus propuestas.
+        </p>
+
+      </article>
+
+      <article class="step">
+
+        <span class="step-number">03</span>
+
+        <h3>Contrata y califica</h3>
+
+        <p>
+          Selecciona una propuesta y evalúa el servicio
+          cuando haya finalizado.
+        </p>
+
+      </article>
+
+    </div>
+
+  </section>
+
+  <!-- Acceso según el rol -->
+  <section class="action-section card">
+
+    @if (auth.usuario(); as usuario) {
+
+      @switch (usuario.rol) {
+
+        @case ('CLIENTE') {
+
+          <div>
+            <h2>¿Necesitas contratar un servicio?</h2>
+            <p>Publica y administra tus solicitudes.</p>
+          </div>
+
+          <a routerLink="/cliente" class="btn btn-primary">
+            Ir a mi panel
+          </a>
+
+        }
+
+        @case ('PROFESIONAL') {
+
+          <div>
+            <h2>Encuentra nuevas oportunidades</h2>
+            <p>Consulta solicitudes y administra tus cotizaciones.</p>
+          </div>
+
+          <a routerLink="/profesional" class="btn btn-primary">
+            Ir a mi panel
+          </a>
+
+        }
+
+        @case ('ADMIN') {
+
+          <div>
+            <h2>Administración de OficioYA</h2>
+            <p>Gestiona los recursos de la plataforma.</p>
+          </div>
+
+          <a routerLink="/admin" class="btn btn-primary">
+            Administrar
+          </a>
+
+        }
+
+      }
+
+    } @else {
+
+      <div>
+        <h2>Forma parte de OficioYA</h2>
+
+        <p>
+          Regístrate para solicitar servicios u ofrecer
+          tus conocimientos profesionales.
+        </p>
+      </div>
+
+      <a routerLink="/registro" class="btn btn-primary">
+        Crear una cuenta
+      </a>
+
+    }
+
+  </section>
+
+</div>
