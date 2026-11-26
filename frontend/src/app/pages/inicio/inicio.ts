@@ -6,6 +6,7 @@ import { forkJoin } from 'rxjs';
 import { Auth } from '../../core/services/auth';
 import { CategoriaService } from '../../core/services/categoria';
 import { ProfesionalService } from '../../core/services/profesional';
+import { PublicoService } from '../../core/services/publico';
 
 import {
   Categoria,
@@ -25,11 +26,13 @@ export class Inicio implements OnInit {
 
   private readonly categoriaService = inject(CategoriaService);
   private readonly profesionalService = inject(ProfesionalService);
+  private readonly publicoService = inject(PublicoService);
 
   // Estado del componente
   readonly categorias = signal<Categoria[]>([]);
   readonly profesionales = signal<Profesional[]>([]);
 
+  readonly saludo = signal('');
   readonly cargando = signal(true);
   readonly error = signal('');
 
@@ -63,7 +66,16 @@ export class Inicio implements OnInit {
 
   // Inicialización del componente
   ngOnInit(): void {
+    this.cargarSaludo();
     this.cargarDatos();
+  }
+
+  // Consultar el saludo del backend
+  cargarSaludo(): void {
+    this.publicoService.obtenerSaludo().subscribe({
+      next: mensaje => this.saludo.set(mensaje),
+      error: () => this.saludo.set('')
+    });
   }
 
   // Consultar información del backend

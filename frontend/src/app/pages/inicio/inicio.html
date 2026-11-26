@@ -1,6 +1,10 @@
 <section class="search-section">
   <div class="container">
 
+    @if (saludo()) {
+      <p class="search-description">{{ saludo() }}</p>
+    }
+
     <h1>Encuentra al profesional que necesitas</h1>
 
     <p class="search-description">
@@ -255,70 +259,61 @@
   </section>
 
   <!-- Acceso según el rol -->
-  <section class="action-section card">
+  @if (auth.usuario()?.rol !== 'ADMIN') {
 
-    @if (auth.usuario(); as usuario) {
+    <section class="action-section card">
 
-      @switch (usuario.rol) {
+      @if (auth.usuario(); as usuario) {
 
-        @case ('CLIENTE') {
+        @switch (usuario.rol) {
 
-          <div>
-            <h2>¿Necesitas contratar un servicio?</h2>
-            <p>Publica y administra tus solicitudes.</p>
-          </div>
+          @case ('CLIENTE') {
 
-          <a routerLink="/cliente" class="btn btn-primary">
-            Ir a mi panel
-          </a>
+            <div>
+              <h2>¿Necesitas contratar un servicio?</h2>
+              <p>Publica y administra tus solicitudes.</p>
+            </div>
 
-        }
+            <a routerLink="/cliente" class="btn btn-primary">
+              Ir a mi panel
+            </a>
 
-        @case ('PROFESIONAL') {
+          }
 
-          <div>
-            <h2>Encuentra nuevas oportunidades</h2>
-            <p>Consulta solicitudes y administra tus cotizaciones.</p>
-          </div>
+          @case ('PROFESIONAL') {
 
-          <a routerLink="/profesional" class="btn btn-primary">
-            Ir a mi panel
-          </a>
+            <div>
+              <h2>Encuentra nuevas oportunidades</h2>
+              <p>Consulta solicitudes y administra tus cotizaciones.</p>
+            </div>
 
-        }
+            <a routerLink="/profesional" class="btn btn-primary">
+              Ir a mi panel
+            </a>
 
-        @case ('ADMIN') {
-
-          <div>
-            <h2>Administración de OficioYA</h2>
-            <p>Gestiona los recursos de la plataforma.</p>
-          </div>
-
-          <a routerLink="/admin" class="btn btn-primary">
-            Administrar
-          </a>
+          }
 
         }
+
+      } @else {
+
+        <div>
+          <h2>Forma parte de OficioYA</h2>
+
+          <p>
+            Regístrate para solicitar servicios u ofrecer
+            tus conocimientos profesionales.
+          </p>
+        </div>
+
+        <a routerLink="/registro" class="btn btn-primary">
+          Crear una cuenta
+        </a>
 
       }
 
-    } @else {
+    </section>
 
-      <div>
-        <h2>Forma parte de OficioYA</h2>
-
-        <p>
-          Regístrate para solicitar servicios u ofrecer
-          tus conocimientos profesionales.
-        </p>
-      </div>
-
-      <a routerLink="/registro" class="btn btn-primary">
-        Crear una cuenta
-      </a>
-
-    }
-
-  </section>
+  }
 
 </div>
